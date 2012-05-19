@@ -1,6 +1,6 @@
 = ruby-box
 
-Description goes here.
+Ruby SDK for Box API 2.0
 
 == Contributing to ruby-box
  
@@ -14,6 +14,6 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2012 Jesse Miller. See LICENSE.txt for
+Copyright (c) 2012 Attachments.me. See LICENSE.txt for
 further details.
 
