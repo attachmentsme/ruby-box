@@ -2,6 +2,7 @@ require 'uri'
 require 'net/https'
 require 'json'
 require 'net/http/post/multipart'
+require 'exceptions'
 
 class RubyBox
   
@@ -67,6 +68,9 @@ class RubyBox
     request.add_field('Authorization', build_auth_header)
     
     response = http.request(request)
+    if response.is_a? Net::HTTPNotFound
+      raise RBException::ObjectNotFound
+    end
     return JSON.parse(response.body)
   end
 end

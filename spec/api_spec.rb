@@ -17,6 +17,11 @@ describe RubyBox, '#list' do
     response["total_count"].should eq(3)
     response["entries"].should include({"type"=>"file", "id"=>"1600119854", "sequence_id"=>"0", "name"=>"a_atme_chrome_notes_01.pdf"})
   end
+
+  it "returns appropriately if the path does not exist" do
+    ruby_box = RubyBox.new(ACCOUNT['api_key'], ACCOUNT['auth_token'])
+    expect { ruby_box.list(207492335) }.to raise_error(RBException::ObjectNotFound)
+  end
 end
 
 describe RubyBox, '#list_by_path' do
