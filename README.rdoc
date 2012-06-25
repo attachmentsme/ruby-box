@@ -1,6 +1,6 @@
 = ruby-box
 
-Ruby SDK for Box API 2.0
+Ruby SDK for Box API 2.0 (http://developers.box.com/docs/)
 
 == Contributing to ruby-box
  
