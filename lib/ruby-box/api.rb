@@ -116,6 +116,7 @@ module RubyBox
     
     def list( path )
       fitem = folder( path )
+      return [] if fitem.nil?
       return fitem.list
     end
     
@@ -140,7 +141,8 @@ module RubyBox
         root_fitem = root_fitem.folder( folder )
         return nil if root_fitem.nil?
       end
-      root_fitem.file( fname )
+      retval = root_fitem.file( fname )
+      retval.nil? || retval.root_id.nil? ? nil : retval
     end
     
     def download( path )
@@ -171,6 +173,7 @@ module RubyBox
     end
           
     def folder(path)
+      return nil if path.nil?
       folders = path.split('/')
       while !folders.empty? && folders.first.empty?
         folders.shift
@@ -179,10 +182,11 @@ module RubyBox
       
       folders.each do |folder|
         root_fitem = root_fitem.folder( folder )
-        return nil if root_fitem.nil?
+        return nil if root_fitem.root_id.nil?
       end
       return root_fitem
     end
+    
   end
   
   class Xport

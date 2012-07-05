@@ -64,6 +64,16 @@ describe RubyBox do
         response["total_count"].should eq(3)
         response["entries"].should include({"type"=>"folder", "id"=>"318810323", "sequence_id"=>"0", "name"=>"cool stuff"})
       end
+      
+      it 'returns an empty array if no path specified' do
+        response = @user_api.list(nil)
+        response.should eq []
+      end
+      
+      it 'returns an empty array if a nonexistent path specified' do
+        response = @user_api.list('/none')
+        response.should eq []
+      end
     end
     
     describe '#put_data' do
@@ -99,8 +109,13 @@ describe RubyBox do
       
       it "returns nil if the file doesnt exist" do
         fitem = @user_api.file( 'DoesntExist' )
-        fitem.root_id.should eq nil
+        fitem.should eq nil
       end    
+      
+      it "returns nil if the file path doesnt exist" do
+        fitem = @user_api.file( '/nodir/DoesntExist' )
+        fitem.should eq nil
+      end
     end
   
     describe '#create_path' do
@@ -118,6 +133,11 @@ describe RubyBox do
       it "finds the id of a file" do
         data = @user_api.download( '/MyDocs/cool stuff/кузнецкий_105_а_№2.test' )
         data.should eq "Test more data"
+      end
+      
+      it "returns nil for a nonexistent file" do
+        data = @user_api.download( '/MyDocs/doesntexist' )
+        data.should eq nil
       end   
     end
   end
