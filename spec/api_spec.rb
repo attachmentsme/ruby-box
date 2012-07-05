@@ -67,12 +67,12 @@ describe RubyBox do
       
       it 'returns an empty array if no path specified' do
         response = @user_api.list(nil)
-        response.should eq []
+        response.should eq({})
       end
       
       it 'returns an empty array if a nonexistent path specified' do
         response = @user_api.list('/none')
-        response.should eq []
+        response.should eq({})
       end
     end
     

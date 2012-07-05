@@ -116,7 +116,7 @@ module RubyBox
     
     def list( path )
       fitem = folder( path )
-      return [] if fitem.nil?
+      return {} if fitem.nil?
       return fitem.list
     end
     
