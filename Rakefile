@@ -20,8 +20,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "ruby-box"
   gem.homepage = "http://github.com/jessemiller/ruby-box"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{ruby gem for box.com 2.0 api}
+  gem.description = %Q{ruby gem for box.com 2.0 api}
   gem.email = "millerjesse@gmail.com"
   gem.authors = ["Jesse Miller"]
   # dependencies defined in Gemfile
