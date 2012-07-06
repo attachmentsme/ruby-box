@@ -205,6 +205,8 @@ module RubyBox
     def do_http(uri, request, raw=false)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
+      http.ssl_version = :SSLv3
+      
       request.add_field('Authorization', build_auth_header)
       response = http.request(request)
       if response.is_a? Net::HTTPNotFound
