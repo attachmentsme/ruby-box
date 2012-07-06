@@ -25,7 +25,7 @@ module RubyBox
     end
     
     def put_data( data, fname )
-      url = "https://upload.box.com/api/2.0/files/#{@root_id}data"
+      url = "https://upload.box.com/api/2.0/files/#{@root_id}/data"
       uri = URI.parse(url)
       request = Net::HTTP::Post::Multipart.new(uri.path, {
         "filename" => UploadIO.new(data, "application/pdf", fname),
@@ -81,7 +81,7 @@ module RubyBox
       request.body = { "name" => folder_name }.to_json
       resp = @xport.do_http( uri, request )
       fid = resp["id"] if resp["name"] == folder_name
-      FItem.new( @xport, fid )
+      FFolder.new( @xport, fid )
     end
     
     def put_new_file( fname )
