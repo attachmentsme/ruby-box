@@ -22,7 +22,7 @@ describe RubyBox do
       it "returns list of items in the folder id passed in" do
         @folder.root_id = 318810303
         response = @folder.list
-        response["total_count"].should eq(3)
+        response["total_count"].should eq(4)
         response["entries"].should include({"type"=>"file", "id"=>"2550686921", "sequence_id"=>"1", "name"=>"2513582219_03fb9b67db_b.jpg"})
       end
     
@@ -53,6 +53,15 @@ describe RubyBox do
         folder = @folder.create( 'new_folder_created' )
         folder.root_id.should_not be_nil
       end
+
+      it "creates a folder with special chars in the name" do
+        folder = @user_api.folder('/ruby-box_gem_testing/!@#$%^&$$()')
+        folder.delete
+
+        @folder.root_id = 318810303
+        folder = @folder.create( '!@#$%^&$$()' )
+        folder.root_id.should_not be_nil
+      end
     end
     
   end
@@ -61,7 +70,7 @@ describe RubyBox do
     describe '#list' do
       it "returns list of items in the folder path passed in" do
         response = @user_api.list('/ruby-box_gem_testing')
-        response["total_count"].should eq(3)
+        response["total_count"].should eq(4)
         response["entries"].should include({"type"=>"folder", "id"=>"321690909", "sequence_id"=>"0", "name"=>"cool stuff"})
       end
       
