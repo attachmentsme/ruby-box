@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jesse Miller"]
-  s.date = "2012-07-06"
+  s.date = "2012-07-09"
   s.description = "ruby gem for box.com 2.0 api"
   s.email = "millerjesse@gmail.com"
   s.extra_rdoc_files = [
@@ -30,8 +30,7 @@ Gem::Specification.new do |s|
     "ruby-box.gemspec",
     "spec/api_spec.rb",
     "spec/helper/account.example",
-    "spec/helper/account.rb",
-    "spec/кузнецкий_105_а_№2.test"
+    "spec/helper/account.rb"
   ]
   s.homepage = "http://github.com/jessemiller/ruby-box"
   s.licenses = ["MIT"]

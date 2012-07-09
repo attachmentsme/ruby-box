@@ -24,6 +24,7 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{ruby gem for box.com 2.0 api}
   gem.email = "millerjesse@gmail.com"
   gem.authors = ["Jesse Miller"]
+  gem.files.exclude 'spec/*.test'
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
