@@ -2,28 +2,56 @@
 
 require 'helper/account'
 require 'ruby-box'
+require 'webmock/rspec'
 
 describe RubyBox do
   before do
+    WebMock.allow_net_connect!
+    
     xport = RubyBox::Xport.new(ACCOUNT['api_key'], ACCOUNT['auth_token'])
     @folder = RubyBox::FFolder.new( xport )
     @user_api = RubyBox::UserAPI.new( xport )
   end
     
   describe RubyBox::FFolder do
+    it "raises an AuthError if not client auth fails" do
+      xport = RubyBox::Xport.new(ACCOUNT['api_key'], ACCOUNT['auth_token'] + 'x')
+      @bad_folder = RubyBox::FFolder.new( xport )    
+      lambda {@bad_folder.list}.should raise_error( RubyBox::AuthError )
+    end
+    
+    it "raises a RequestError if a badly formed request detected by the server" do
+      stub_request(:get, "https://api.box.com/2.0/folders/0/items").to_return(:status => 401, :body => '{"type": "error", "status": 401, "message": "baddd req"}', :headers => {})
+      lambda {@folder.list}.should raise_error( RubyBox::RequestError ) 
+    end
+      
+    it "raises a ServerError if the server raises a 500 error" do
+      stub_request(:get, "https://api.box.com/2.0/folders/0/items").to_return(:status => 503, :body => '{"type": "error", "status": 503, "message": "We messed up! - Box.com"}', :headers => {})
+      lambda {@folder.list}.should raise_error( RubyBox::ServerError )
+    end
+  end
   
+  describe RubyBox::FFolder do
     describe '#list' do
       it "returns list of items in the root folder if no arguments given" do
         response = @folder.list
         response["total_count"].should eq(3)
-        response["entries"].should include({"type"=>"folder","id"=>"318810303","sequence_id"=>"1","name"=>"ruby-box_gem_testing"})
+        response["entries"].any? do |e|
+          e["type"] == "folder" && 
+          e["id"]   == "318810303" &&
+          e["name"] == "ruby-box_gem_testing"
+        end.should == true
       end
       
       it "returns list of items in the folder id passed in" do
         @folder.root_id = 318810303
         response = @folder.list
         response["total_count"].should eq(4)
-        response["entries"].should include({"type"=>"file", "id"=>"2550686921", "sequence_id"=>"1", "name"=>"2513582219_03fb9b67db_b.jpg"})
+        response["entries"].any? do |e|
+          e["type"] == "file" && 
+          e["id"]   == "2550686921" &&
+          e["name"] == "2513582219_03fb9b67db_b.jpg"
+        end.should == true
       end
     
       it "returns appropriately if the path does not exist" do 
@@ -32,7 +60,21 @@ describe RubyBox do
       end
     end
     
-    describe '#get_folder_id' do
+    describe '#file' do
+      it "finds the id of a file" do
+        @folder.root_id = 318810303
+        ffile = @folder.file( '2513582219_03fb9b67db_b.jpg' )
+        ffile.root_id.should == "2550686921"
+      end
+      
+      it "returns a file with nil root_id if not found" do
+        @folder.root_id = 318810303
+        ffile = @folder.file( 'doesntexist.jpg' )
+        ffile.root_id.should be_nil
+      end
+    end
+        
+    describe '#folder' do
       it "finds the id of a folder" do
         fitem = @folder.folder( 'ruby-box_gem_testing' )
         fitem.root_id.should eq "318810303"
@@ -63,7 +105,6 @@ describe RubyBox do
         folder.root_id.should_not be_nil
       end
     end
-    
   end
 
   describe RubyBox::UserAPI do
@@ -71,7 +112,11 @@ describe RubyBox do
       it "returns list of items in the folder path passed in" do
         response = @user_api.list('/ruby-box_gem_testing')
         response["total_count"].should eq(4)
-        response["entries"].should include({"type"=>"folder", "id"=>"321690909", "sequence_id"=>"0", "name"=>"cool stuff"})
+        response["entries"].any? do |e|
+          e["type"] == "folder" &&
+          e["id"]   == "321690909" &&
+          e["name"] ==  "cool stuff"
+        end.should == true
       end
       
       it 'returns an empty array if no path specified' do
@@ -131,7 +176,6 @@ describe RubyBox do
       it "creates a path that doesnt exist" do
         last_fitem = @user_api.folder('/ruby-box_gem_testing/cool stuff/екузц/path1/path2')
         last_fitem.delete
-        
         
         response = @user_api.create_path('/ruby-box_gem_testing/cool stuff/екузц/path1/path2')
         response.root_id.should_not be_nil

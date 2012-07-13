@@ -36,9 +36,15 @@ module RubyBox
   end
   
   class FFolder < FItem
-    def file( name )
+    # return a new fitem.  The fitem.root_id is nil if no file found. 
+    #
+    # returns nil if there are no entries.
+    # 
+    # throws exception if low level exception occurred
+    #
+    def file( name )  
       resp = list
-      return nil if resp['entries'].nil?
+      return nil if resp['entries'].nil?  
       file_id = nil
       resp["entries"].each do |item|
         next if item["type"] != "file"
@@ -75,7 +81,7 @@ module RubyBox
     end      
         
     def create( folder_name )
-      url = "https://api.box.com/2.0/folders#{@root_id}"
+      url = "https://api.box.com/2.0/folders/#{@root_id}"
       uri = URI.parse(url)
       request = Net::HTTP::Post.new( uri.request_uri )
       request.body = { "name" => folder_name }.to_json
@@ -139,7 +145,7 @@ module RubyBox
       root_fitem = @folder
       folders.each do |folder|
         root_fitem = root_fitem.folder( folder )
-        return nil if root_fitem.nil?
+        return nil if root_fitem.root_id.nil?
       end
       retval = root_fitem.file( fname )
       retval.nil? || retval.root_id.nil? ? nil : retval
@@ -212,7 +218,22 @@ module RubyBox
       if response.is_a? Net::HTTPNotFound
         raise RubyBox::ObjectNotFound
       end
-      raw ? response.body : JSON.parse(response.body)
+      raw ? response.body : handle_errors( response.body )
+    end
+    
+    def handle_errors( resp )
+      retval = JSON.parse(resp)
+      
+      if retval["type"] == "error"
+        case retval["status"] / 100
+        when 4
+          raise(RubyBox::AuthError, retval["message"]) if retval["code"] == "unauthorized"
+          raise(RubyBox::RequestError, retval["message"])
+        when 5
+          raise RubyBox::ServerError, retval["message"]
+        end
+      end
+      retval
     end
   end
 end
