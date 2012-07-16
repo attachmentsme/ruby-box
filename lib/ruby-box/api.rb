@@ -128,12 +128,15 @@ module RubyBox
     
     def put_data( data, path, file )
       fitem = create_path( path )
-      file_fitem = fitem.file( file )
-      if file_fitem.root_id.nil?
-        fitem.put_new_file_data( data, file )
-      else
-        file_fitem.put_data( data, file )
+      resp = fitem.put_new_file_data(data, file) #write a new file. If there is a conflict, update the conflicted file.
+      if resp["entries"].first["type"] == "error" && resp["entries"].first["code"] == "conflict"
+        conflict = resp["entries"].first["context_info"]["conflicts"].first
+        file_id = conflict["id"] 
+        file_fitem = FFile.new( @xport, file_id )
+        data.rewind
+        resp = file_fitem.put_data( data, file )
       end
+      resp
     end
     
     def file( path )

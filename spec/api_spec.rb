@@ -131,18 +131,19 @@ describe RubyBox do
     end
     
     describe '#put_data' do
-      it "should upload a new file to the specified folder path" do
+      it "should update an existing file" do
         utf8_file_name = 'кузнецкий_105_а_№2.test'
         fdata = File.open( 'spec/'+utf8_file_name, 'rb' )
         response = @user_api.put_data( fdata, '/ruby-box_gem_testing/cool stuff', utf8_file_name)
         fdata = File.open( 'spec/'+utf8_file_name, 'rb' )
         
         response = @user_api.put_data( fdata, '/ruby-box_gem_testing/cool stuff', utf8_file_name)
+        
         response["total_count"].should eq(1)
         response["entries"].all? { |e| e["type"] != "error" }.should be_true
       end
       
-      it "should upload a new file to the specified folder path" do
+      it "should upload a new file" do
         utf8_file_name = 'кузнецкий_105_а_№2.test'
         fdata = File.open( 'spec/' + utf8_file_name, 'rb' )
         
@@ -150,6 +151,7 @@ describe RubyBox do
         file_to_delete.delete
         
         response = @user_api.put_data( fdata, '/ruby-box_gem_testing/cool stuff', utf8_file_name)
+        
         response["total_count"].should eq(1)
         response["entries"].all? { |e| e["type"] != "error" }.should be_true
       end
