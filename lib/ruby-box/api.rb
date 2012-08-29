@@ -24,6 +24,15 @@ module RubyBox
       resp = @xport.do_http( uri, request, raw )
     end
     
+    def get_info
+      url = "https://api.box.com/2.0/files/#{@root_id}"
+      uri = URI.parse(url)
+      request = Net::HTTP::Get.new( uri.request_uri )
+      raw = true
+      resp = @xport.do_http( uri, request, raw )
+    end
+      
+      
     def put_data( data, fname )
       url = "https://upload.box.com/api/2.0/files/#{@root_id}/data"
       uri = URI.parse(url)
@@ -129,7 +138,7 @@ module RubyBox
     def put_data( data, path, file )
       fitem = create_path( path )
       resp = fitem.put_new_file_data(data, file) #write a new file. If there is a conflict, update the conflicted file.
-      if resp["entries"].first["type"] == "error" && resp["entries"].first["code"] == "conflict"
+      if resp["entries"].first["type"] == "error" && (resp["entries"].first["code"] == "conflict" || resp["entries"].first["code"] == "item_name_in_use")
         conflict = resp["entries"].first["context_info"]["conflicts"].first
         file_id = conflict["id"] 
         file_fitem = FFile.new( @xport, file_id )
@@ -221,22 +230,26 @@ module RubyBox
       if response.is_a? Net::HTTPNotFound
         raise RubyBox::ObjectNotFound
       end
-      raw ? response.body : handle_errors( response.body )
+      handle_errors( response.code.to_i, response.body, raw )
+      # raw ? response.body : handle_errors( response.body )
     end
     
-    def handle_errors( resp )
-      retval = JSON.parse(resp)
-      
-      if retval["type"] == "error"
-        case retval["status"] / 100
-        when 4
-          raise(RubyBox::AuthError, retval["message"]) if retval["code"] == "unauthorized"
-          raise(RubyBox::RequestError, retval["message"])
-        when 5
-          raise RubyBox::ServerError, retval["message"]
-        end
+    def handle_errors( status, body, raw )
+      begin
+        parsed_body = JSON.parse(body)
+      rescue
+        msg = body.empty? ? "no data returned" : body
+        parsed_body = { "message" =>  msg }
       end
-      retval
+      
+      case status / 100
+      when 4
+        raise(RubyBox::AuthError, parsed_body["message"]) if parsed_body["code"] == "unauthorized"
+        raise(RubyBox::RequestError, parsed_body["message"])
+      when 5
+        raise RubyBox::ServerError, parsed_body["message"]
+      end
+      raw ? body : parsed_body
     end
   end
 end

@@ -35,7 +35,7 @@ describe RubyBox do
     describe '#list' do
       it "returns list of items in the root folder if no arguments given" do
         response = @folder.list
-        response["total_count"].should eq(3)
+        response["total_count"].should eq(6)
         response["entries"].any? do |e|
           e["type"] == "folder" && 
           e["id"]   == "318810303" &&
@@ -147,8 +147,8 @@ describe RubyBox do
         utf8_file_name = 'кузнецкий_105_а_№2.test'
         fdata = File.open( 'spec/' + utf8_file_name, 'rb' )
         
-        file_to_delete = @user_api.file( "/ruby-box_gem_testing/cool stuff/#{utf8_file_name}" )
-        file_to_delete.delete
+        # file_to_delete = @user_api.file( "/ruby-box_gem_testing/cool stuff/#{utf8_file_name}" )
+        # file_to_delete.delete
         
         response = @user_api.put_data( fdata, '/ruby-box_gem_testing/cool stuff', utf8_file_name)
         
