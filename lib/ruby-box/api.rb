@@ -31,15 +31,24 @@ module RubyBox
       raw = true
       resp = @xport.do_http( uri, request, raw )
     end
-      
-      
+    
+    def get_etag
+      url = "https://api.box.com/2.0/files/#{@root_id}"
+      uri = URI.parse(url)
+      request = Net::HTTP::Get.new( uri.request_uri )
+      raw = true
+      resp = @xport.do_http( uri, request )['etag']
+    end
+    
     def put_data( data, fname )
       url = "https://upload.box.com/api/2.0/files/#{@root_id}/data"
       uri = URI.parse(url)
+      etag = get_etag
+      
       request = Net::HTTP::Post::Multipart.new(uri.path, {
         "filename" => UploadIO.new(data, "application/pdf", fname),
         "folder_id" => @root_id
-      })
+      }, {"if-match" => etag })
       @xport.do_http(uri, request)
     end
   end
