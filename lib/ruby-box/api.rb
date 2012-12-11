@@ -247,7 +247,7 @@ module RubyBox
       begin
         parsed_body = JSON.parse(body)
       rescue
-        msg = body.empty? ? "no data returned" : body
+        msg = body.nil? || body.empty? ? "no data returned" : body
         parsed_body = { "message" =>  msg }
       end
       
