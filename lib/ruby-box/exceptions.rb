@@ -3,4 +3,5 @@ module RubyBox
   class AuthError < StandardError; end
   class RequestError < StandardError; end
   class ServerError < StandardError; end
+  class ItemNameInUse < StandardError; end
 end
