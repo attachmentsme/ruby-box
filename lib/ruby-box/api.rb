@@ -41,7 +41,7 @@ module RubyBox
     end
     
     def put_data( data, fname )
-      url = "https://upload.box.com/api/2.0/files/#{@root_id}/data"
+      url = "https://upload.box.com/api/2.0/files/#{@root_id}/content"
       uri = URI.parse(url)
       etag = get_etag
       
@@ -99,17 +99,17 @@ module RubyBox
     end      
         
     def create( folder_name )
-      url = "https://api.box.com/2.0/folders/#{@root_id}"
+      url = "https://api.box.com/2.0/folders"
       uri = URI.parse(url)
       request = Net::HTTP::Post.new( uri.request_uri )
-      request.body = { "name" => folder_name }.to_json
+      request.body = { "name" => folder_name, "parent" => {"id" => @root_id} }.to_json
       resp = @xport.do_http( uri, request )
       fid = resp["id"] if resp["name"] == folder_name
       FFolder.new( @xport, fid )
     end
     
     def put_new_file( fname )
-      url = "https://upload.box.com/api/2.0/files/data"
+      url = "https://upload.box.com/api/2.0/files/content"
       uri = URI.parse(url)
       File.open( fname ) do |file_stream|
         request = Net::HTTP::Post::Multipart.new(uri.path, {
@@ -121,7 +121,7 @@ module RubyBox
     end
     
     def put_new_file_data( data, fname )
-      url = "https://upload.box.com/api/2.0/files/data"
+      url = "https://upload.box.com/api/2.0/files/content"
       uri = URI.parse(url)
       request = Net::HTTP::Post::Multipart.new(uri.path, {
         "filename" => UploadIO.new(data, "application/pdf", fname),
@@ -146,11 +146,10 @@ module RubyBox
     
     def put_data( data, path, file )
       fitem = create_path( path )
-      resp = fitem.put_new_file_data(data, file) #write a new file. If there is a conflict, update the conflicted file.
-      if resp["entries"].first["type"] == "error" && (resp["entries"].first["code"] == "conflict" || resp["entries"].first["code"] == "item_name_in_use")
-        conflict = resp["entries"].first["context_info"]["conflicts"].first
-        file_id = conflict["id"] 
-        file_fitem = FFile.new( @xport, file_id )
+      begin
+        resp = fitem.put_new_file_data(data, file) #write a new file. If there is a conflict, update the conflicted file.
+      rescue RubyBox::ItemNameInUse => e
+        file_fitem = file( path + '/' + file )
         data.rewind
         resp = file_fitem.put_data( data, file )
       end
@@ -253,6 +252,7 @@ module RubyBox
       
       case status / 100
       when 4
+        raise(RubyBox::ItemNameInUse, parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
         raise(RubyBox::AuthError, parsed_body["message"]) if parsed_body["code"] == "unauthorized"
         raise(RubyBox::RequestError, parsed_body["message"])
       when 5
