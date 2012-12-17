@@ -89,18 +89,18 @@ describe RubyBox do
     describe '#create' do
       it "creates a folder" do
         folder = @user_api.folder('/ruby-box_gem_testing/new_folder_created')
-        folder.delete
+        folder.delete if folder
 
-        @folder.root_id = 318810303
+        @folder = @user_api.folder('/ruby-box_gem_testing')
         folder = @folder.create( 'new_folder_created' )
         folder.root_id.should_not be_nil
       end
 
       it "creates a folder with special chars in the name" do
         folder = @user_api.folder('/ruby-box_gem_testing/!@#$%^&$$()')
-        folder.delete
+        folder.delete if folder
 
-        @folder.root_id = 318810303
+        @folder = @user_api.folder('/ruby-box_gem_testing')
         folder = @folder.create( '!@#$%^&$$()' )
         folder.root_id.should_not be_nil
       end
@@ -147,8 +147,8 @@ describe RubyBox do
         utf8_file_name = 'кузнецкий_105_а_№2.test'
         fdata = File.open( 'spec/' + utf8_file_name, 'rb' )
         
-        # file_to_delete = @user_api.file( "/ruby-box_gem_testing/cool stuff/#{utf8_file_name}" )
-        # file_to_delete.delete
+        file_to_delete = @user_api.file( "/ruby-box_gem_testing/cool stuff/#{utf8_file_name}" )
+        file_to_delete.delete
         
         response = @user_api.put_data( fdata, '/ruby-box_gem_testing/cool stuff', utf8_file_name)
         
@@ -177,7 +177,7 @@ describe RubyBox do
     describe '#create_path' do
       it "creates a path that doesnt exist" do
         last_fitem = @user_api.folder('/ruby-box_gem_testing/cool stuff/екузц/path1/path2')
-        last_fitem.delete
+        last_fitem.delete if last_fitem
         
         response = @user_api.create_path('/ruby-box_gem_testing/cool stuff/екузц/path1/path2')
         response.root_id.should_not be_nil
