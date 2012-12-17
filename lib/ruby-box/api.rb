@@ -99,10 +99,10 @@ module RubyBox
     end      
         
     def create( folder_name )
-      url = "https://api.box.com/2.0/folders/#{@root_id}"
+      url = "https://api.box.com/2.0/folders"
       uri = URI.parse(url)
       request = Net::HTTP::Post.new( uri.request_uri )
-      request.body = { "name" => folder_name }.to_json
+      request.body = { "name" => folder_name, "parent" => {"id" => @root_id} }.to_json
       resp = @xport.do_http( uri, request )
       fid = resp["id"] if resp["name"] == folder_name
       FFolder.new( @xport, fid )
