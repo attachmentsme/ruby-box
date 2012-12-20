@@ -11,6 +11,7 @@ describe RubyBox do
     xport = RubyBox::Xport.new(ACCOUNT['api_key'], ACCOUNT['auth_token'])
     @folder = RubyBox::FFolder.new( xport )
     @user_api = RubyBox::UserAPI.new( xport )
+    @test_file_path = "./spec/кузнецкий_105_а_№2.test"
   end
     
   describe RubyBox::FFolder do
@@ -181,6 +182,14 @@ describe RubyBox do
         
         response = @user_api.create_path('/ruby-box_gem_testing/cool stuff/екузц/path1/path2')
         response.root_id.should_not be_nil
+      end
+    end
+
+    describe '#get_file_info' do
+      it "returns meta information for a file" do
+        meta = @user_api.get_file_info( '/ruby-box_gem_testing/cool stuff/кузнецкий_105_а_№2.test' )
+        @test_file_path.should include "#{meta['name']}"
+        meta['size'].should eq File.size( @test_file_path )
       end
     end
     
