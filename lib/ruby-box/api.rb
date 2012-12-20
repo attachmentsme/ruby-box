@@ -82,7 +82,6 @@ module RubyBox
       FFolder.new( @xport, file_id )
     end
     
-    
     def delete
       url = "https://api.box.com/2.0/folders/#{@root_id}"
       uri = URI.parse(url)
@@ -170,6 +169,12 @@ module RubyBox
       retval = root_fitem.file( fname )
       retval.nil? || retval.root_id.nil? ? nil : retval
     end
+
+    def get_file_info( path )
+      fitem = file( path )
+      return nil if fitem.nil?
+      JSON.parse( fitem.get_info )
+    end
     
     def download( path )
       fitem = file( path )
@@ -180,7 +185,7 @@ module RubyBox
       request = Net::HTTP::Get.new( uri.request_uri )
       raw = true
       resp = @xport.do_http( uri, request, raw )
-    end      
+    end    
     
     def create_path( path )
       folders = path.split('/')
