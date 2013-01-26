@@ -193,6 +193,23 @@ describe RubyBox do
       end
     end
     
+    describe '#stream' do
+      it "should download file contents" do
+        stream = @user_api.stream( '/ruby-box_gem_testing/cool stuff/кузнецкий_105_а_№2.test' )
+        stream.read.should eq "Test more data"        
+      end
+
+      it "should execute content_length_proc lambda with filesize" do
+        stream = @user_api.stream(
+          '/ruby-box_gem_testing/cool stuff/кузнецкий_105_а_№2.test',
+          :content_length_proc => lambda {|filesize|
+            filesize.should == 14
+          }
+        )
+        stream.read.should eq "Test more data"                
+      end
+    end
+
     describe '#download' do
       it "finds the id of a file" do
         data = @user_api.download( '/ruby-box_gem_testing/cool stuff/кузнецкий_105_а_№2.test' )
