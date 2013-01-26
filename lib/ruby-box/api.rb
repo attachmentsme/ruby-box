@@ -2,6 +2,7 @@ require 'uri'
 require 'net/https'
 require 'json'
 require 'net/http/post/multipart'
+require 'open-uri'
 
 module RubyBox
   
@@ -185,7 +186,15 @@ module RubyBox
       request = Net::HTTP::Get.new( uri.request_uri )
       raw = true
       resp = @xport.do_http( uri, request, raw )
-    end    
+    end
+
+    def stream( path, opts={} )
+      fitem = file( path )
+      return nil if fitem.nil?
+      # url = "https://api.box.com/2.0/files/#{fitem.root_id}/data" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
+      url = "https://www.box.com/api/1.0/download/#{@xport.auth_token}/#{fitem.root_id}"  #api v1.0 - this does work
+      @xport.do_stream( url, opts )
+    end
     
     def create_path( path )
       folders = path.split('/')
@@ -245,6 +254,14 @@ module RubyBox
       end
       handle_errors( response.code.to_i, response.body, raw )
       # raw ? response.body : handle_errors( response.body )
+    end
+
+    def do_stream(url, opts)
+      open(url, {
+        'Authorization' => build_auth_header,
+        :content_length_proc => opts[:content_length_proc],
+        :progress_proc => opts[:progress_proc]
+      })
     end
     
     def handle_errors( status, body, raw )
