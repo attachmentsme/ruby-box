@@ -25,7 +25,7 @@ describe RubyBox do
       stub_request(:get, "https://api.box.com/2.0/folders/0/items").to_return(:status => 401, :body => '{"type": "error", "status": 401, "message": "baddd req"}', :headers => {})
       lambda {@folder.list}.should raise_error( RubyBox::RequestError ) 
     end
-      
+    
     it "raises a ServerError if the server raises a 500 error" do
       stub_request(:get, "https://api.box.com/2.0/folders/0/items").to_return(:status => 503, :body => '{"type": "error", "status": 503, "message": "We messed up! - Box.com"}', :headers => {})
       lambda {@folder.list}.should raise_error( RubyBox::ServerError )

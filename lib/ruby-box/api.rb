@@ -149,7 +149,12 @@ module RubyBox
       begin
         resp = fitem.put_new_file_data(data, file) #write a new file. If there is a conflict, update the conflicted file.
       rescue RubyBox::ItemNameInUse => e
-        file_fitem = file( path + '/' + file )
+        file_fitem = nil
+        begin
+          file_fitem = FFile.new(@xport, e['context_info']['conflicts'][0]['id'])
+        rescue
+          file_fitem = file( path + '/' + file )
+        end
         data.rewind
         resp = file_fitem.put_data( data, file )
       end
@@ -274,9 +279,9 @@ module RubyBox
       
       case status / 100
       when 4
-        raise(RubyBox::ItemNameInUse, parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
-        raise(RubyBox::AuthError, parsed_body["message"]) if parsed_body["code"] == "unauthorized"
-        raise(RubyBox::RequestError, parsed_body["message"])
+        raise(RubyBox::ItemNameInUse.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
+        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized"
+        raise(RubyBox::RequestError.new(parsed_body), parsed_body["message"])
       when 5
         raise RubyBox::ServerError, parsed_body["message"]
       end
