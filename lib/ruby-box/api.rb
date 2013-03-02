@@ -152,7 +152,7 @@ module RubyBox
         file_fitem = nil
         begin
           file_fitem = FFile.new(@xport, e['context_info']['conflicts'][0]['id'])
-        rescue
+        rescue # Fallback to looking up by filename if we don't receive an ID back from BOX.
           file_fitem = file( path + '/' + file )
         end
         data.rewind

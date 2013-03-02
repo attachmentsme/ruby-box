@@ -1,5 +1,5 @@
 module RubyBox 
-  class Error < StandardError
+  class RubyBoxError < StandardError
     def initialize(error_json)
       @error_json = error_json
     end
@@ -10,8 +10,8 @@ module RubyBox
   end
 
   class ObjectNotFound < StandardError; end
-  class AuthError < Error; end
-  class RequestError < Error; end
+  class AuthError < RubyBoxError; end
+  class RequestError < RubyBoxError; end
   class ServerError < StandardError; end
-  class ItemNameInUse < Error; end
+  class ItemNameInUse < RubyBoxError; end
 end
