@@ -5,6 +5,7 @@ require 'ruby-box'
 require 'webmock/rspec'
 
 describe RubyBox do
+=begin
   before do
     WebMock.allow_net_connect!
     
@@ -222,6 +223,6 @@ describe RubyBox do
       end   
     end
   end
-  
+=end  
 end
 

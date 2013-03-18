@@ -5,54 +5,9 @@ require 'net/http/post/multipart'
 require 'open-uri'
 
 module RubyBox
-  
-  class FItem
-    attr_accessor :xport, :root_id
-    
-    def initialize( xport, root_id=0 )
-      @xport = xport
-      @root_id = root_id
-    end
-    
-  end
-  
-  class FFile < FItem
-    def delete
-      url = "https://api.box.com/2.0/files/#{@root_id}"
-      uri = URI.parse(url)
-      request = Net::HTTP::Delete.new( uri.request_uri )
-      raw = true
-      resp = @xport.do_http( uri, request, raw )
-    end
-    
-    def get_info
-      url = "https://api.box.com/2.0/files/#{@root_id}"
-      uri = URI.parse(url)
-      request = Net::HTTP::Get.new( uri.request_uri )
-      raw = true
-      resp = @xport.do_http( uri, request, raw )
-    end
-    
-    def get_etag
-      url = "https://api.box.com/2.0/files/#{@root_id}"
-      uri = URI.parse(url)
-      request = Net::HTTP::Get.new( uri.request_uri )
-      raw = true
-      resp = @xport.do_http( uri, request )['etag']
-    end
-    
-    def put_data( data, fname )
-      url = "https://upload.box.com/api/2.0/files/#{@root_id}/content"
-      uri = URI.parse(url)
-      etag = get_etag
-      
-      request = Net::HTTP::Post::Multipart.new(uri.path, {
-        "filename" => UploadIO.new(data, "application/pdf", fname),
-        "folder_id" => @root_id
-      }, {"if-match" => etag })
-      @xport.do_http(uri, request)
-    end
-  end
+
+  API_URL = 'https://api.box.com/2.0'
+  UPLOAD_URL = 'https://upload.box.com/api/2.0'
   
   class FFolder < FItem
     # return a new fitem.  The fitem.root_id is nil if no file found. 
@@ -232,60 +187,5 @@ module RubyBox
       return root_fitem
     end
     
-  end
-  
-  class Xport
-    attr_accessor :api_key, :auth_token
-    
-    def initialize(api_key, auth_token)
-      @api_key = api_key
-      @auth_token = auth_token
-    end
-    # low level communication routines
-    
-    def build_auth_header
-      "BoxAuth api_key=#{@api_key}&auth_token=#{@auth_token}"
-    end
-    
-    def do_http(uri, request, raw=false)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.ssl_version = :SSLv3
-      
-      request.add_field('Authorization', build_auth_header)
-      response = http.request(request)
-      if response.is_a? Net::HTTPNotFound
-        raise RubyBox::ObjectNotFound
-      end
-      handle_errors( response.code.to_i, response.body, raw )
-      # raw ? response.body : handle_errors( response.body )
-    end
-
-    def do_stream(url, opts)
-      open(url, {
-        'Authorization' => build_auth_header,
-        :content_length_proc => opts[:content_length_proc],
-        :progress_proc => opts[:progress_proc]
-      })
-    end
-    
-    def handle_errors( status, body, raw )
-      begin
-        parsed_body = JSON.parse(body)
-      rescue
-        msg = body.nil? || body.empty? ? "no data returned" : body
-        parsed_body = { "message" =>  msg }
-      end
-      
-      case status / 100
-      when 4
-        raise(RubyBox::ItemNameInUse.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
-        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized"
-        raise(RubyBox::RequestError.new(parsed_body), parsed_body["message"])
-      when 5
-        raise RubyBox::ServerError, parsed_body["message"]
-      end
-      raw ? body : parsed_body
-    end
   end
 end
