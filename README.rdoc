@@ -1,8 +1,62 @@
-= ruby-box
+ruby-box
+========
 
-Ruby SDK for Box API 2.0 (http://developers.box.com/docs/)
+Ruby SDK for Box API 2.0 (http://developers.box.com/docs/) maintained by Attachments.me.
 
-== Contributing to ruby-box
+Usage
+-----
+
+File:
+  - comments
+  - reload_meta
+  - creator
+  - owner
+  - last modifier
+  - folder
+  - thumbnail
+  - comments
+
+  - update
+  - update_meta
+  - delete
+  - download
+  - stream
+  - upload
+
+Folder:
+  - items
+  - files
+  - folders
+  - comments
+  - reload_meta
+  - discussions
+  - create_share
+
+User:
+  ...
+
+Comment:
+  ...
+
+Discussion:
+  ...
+
+API:
+  - create_file: full path, data etc
+  - search: return set of matching items.
+
+Session:
+
+Contributors
+------------
+
+Larry Kang
+Dan Reed
+Jesse Miller
+Benjamin Coe
+
+Contributing to ruby-box
+-----------------------
  
 * Rename account.example to account.yml and fill in your Box credentials
 * Type bundle install
@@ -11,7 +65,8 @@ Ruby SDK for Box API 2.0 (http://developers.box.com/docs/)
 * Make it pass
 * Submit a pull request
 
-== Copyright
+Copyright
+---------
 
 Copyright (c) 2012 Attachments.me. See LICENSE.txt for
 further details.

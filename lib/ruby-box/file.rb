@@ -42,6 +42,12 @@ module RubyBox
    #   @xport.do_stream( url, opts )
     end
 
+    def comments
+      url = "#{RubyBox::API_URL}/files/#{id}/comments"
+      resp = @session.get( url )
+      resp['entries'].map {|i| Comment.new(@session, i)}
+    end
+
     private
 
     def prepare_upload(data, fname)
