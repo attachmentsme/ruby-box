@@ -11,13 +11,13 @@ module RubyBox
       "BoxAuth api_key=#{@api_key}&auth_token=#{@auth_token}"
     end
 
-    def get(url, raw)
+    def get(url, raw=false)
       uri = URI.parse(url)
       request = Net::HTTP::Get.new( uri.request_uri )
       resp = request( uri, request, raw )
     end
 
-    def delete(url, raw)
+    def delete(url, raw=false)
       uri = URI.parse(url)
       request = Net::HTTP::Delete.new( uri.request_uri )
       resp = request( uri, request, raw )

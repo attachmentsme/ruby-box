@@ -8,7 +8,7 @@ module RubyBox
 
   API_URL = 'https://api.box.com/2.0'
   UPLOAD_URL = 'https://upload.box.com/api/2.0'
-  
+=begin  
   class FFolder < FItem
     # return a new fitem.  The fitem.root_id is nil if no file found. 
     #
@@ -188,4 +188,5 @@ module RubyBox
     end
     
   end
+=end
 end
