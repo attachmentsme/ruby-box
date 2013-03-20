@@ -4,7 +4,7 @@ module RubyBox
     def put_data( data, fname )
       @raw_item = reload_meta unless etag
 
-      url = "#{RubyBox::UPLOAD_URL}/files/#{id}/content"
+      url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/#{id}/content"
       uri = URI.parse(url)
 
       request = Net::HTTP::Post::Multipart.new(uri.path, {
@@ -42,6 +42,10 @@ module RubyBox
 
     def resource_name
       'files'
+    end
+
+    def update_fields
+      ['name', 'description']
     end
 
     def prepare_upload(data, fname)

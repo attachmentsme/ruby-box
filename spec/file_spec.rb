@@ -28,6 +28,37 @@ describe RubyBox::File do
     file.size.should == 629644
   end
 
+  describe '#update' do
+    it 'should update files raw_item hash if name or description changed' do
+      RubyBox::Session.any_instance.stub(:request).and_return(@full_file)
+      session = RubyBox::Session.new('fake_key', 'fake_token')
+      file = RubyBox::File.new(session, @mini_file)
+      file.name = 'Funky Monkey.jpg'
+      file.description = 'a new description'
+      file.name.should == 'Funky Monkey.jpg'
+      file.description.should == 'a new description'    
+    end
+
+    it 'should not update files raw_item hash for keys not in update_fields' do
+      RubyBox::Session.any_instance.stub(:request).and_return(@full_file)
+      session = RubyBox::Session.new('fake_key', 'fake_token')
+      file = RubyBox::File.new(session, @mini_file)
+      file.id = '000'
+      file.id.should == '2631999573'
+    end
+
+    it 'should make request with appropriate update hash when update called' do
+      RubyBox::Session.any_instance.stub(:request) do |uri, request|
+        data = JSON.parse(request.body)
+        data['description'].should == 'a new description'
+      end
+      session = RubyBox::Session.new('fake_key', 'fake_token')
+      file = RubyBox::File.new(session, @full_file)
+      file.description = 'a new description'
+      file.update
+    end
+  end
+
   describe '#put_data' do
     it "should load full meta information if etag not present" do
       RubyBox::Session.any_instance.stub(:request).and_return(@full_file)
