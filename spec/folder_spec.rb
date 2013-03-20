@@ -18,7 +18,7 @@ describe RubyBox::Folder do
   it "#root returns full root folder object" do
     RubyBox::Session.any_instance.stub(:request).and_return(@full_folder)
     session = RubyBox::Session.new('fake_key', 'fake_token')
-    root = RubyBox::Client.new(session).root_folder(session)
+    root = RubyBox::Client.new(session).root_folder
     root.name.should == 'Pictures'
   end
 
@@ -27,7 +27,7 @@ describe RubyBox::Folder do
       item = JSON.parse('{    "total_count": 1,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        }   ],    "offset": "0",    "limit": "1"}')
       RubyBox::Session.any_instance.stub(:request).and_return(item)
       session = RubyBox::Session.new('fake_key', 'fake_token')   
-      item = RubyBox::Client.new(session).root_folder(session).items.first
+      item = RubyBox::Client.new(session).root_folder.items.first
       item.kind_of?(RubyBox::Folder).should == true
     end
 
@@ -35,7 +35,7 @@ describe RubyBox::Folder do
       item = JSON.parse('{    "total_count": 1,    "entries": [ {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }   ],    "offset": "0",    "limit": "1"}')
       RubyBox::Session.any_instance.stub(:request).and_return(item)
       session = RubyBox::Session.new('fake_key', 'fake_token')   
-      item = RubyBox::Client.new(session).root_folder(session).items.first
+      item = RubyBox::Client.new(session).root_folder.items.first
       item.kind_of?(RubyBox::File).should == true
     end
 
@@ -45,6 +45,49 @@ describe RubyBox::Folder do
       items = RubyBox::Folder.new(session, {'id' => 1}).items(1).to_a
       items[0].kind_of?(RubyBox::Folder).should == true
       items[1].kind_of?(RubyBox::File).should == true
+    end
+  end
+
+  describe '#files' do
+    it "should only return items of type file" do
+      RubyBox::Session.any_instance.stub(:request) { @items.pop }
+      session = RubyBox::Session.new('fake_key', 'fake_token')   
+      files = RubyBox::Folder.new(session, {'id' => 1}).files
+      files.count.should == 1
+      files.first.kind_of?(RubyBox::File).should == true
+    end
+
+    it "should allow you to filter files by name" do
+      items = [
+        JSON.parse('{    "total_count": 4,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        },        {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }    ],    "offset": "0",    "limit": "2"}'),
+        JSON.parse('{    "total_count": 4,    "entries": [        {            "type": "folder",            "id": "409047868",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s another folder"        },        {            "type": "file",            "id": "409042810",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }    ],    "offset": "2",    "limit": "2"}')  
+      ]
+
+      RubyBox::Session.any_instance.stub(:request) { items.pop }
+      session = RubyBox::Session.new('fake_key', 'fake_token')   
+
+      # should return one file.
+      files = RubyBox::Folder.new(session, {'id' => 1}).files('A choice file')
+      files.count.should == 1
+
+      items = [
+        JSON.parse('{    "total_count": 4,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        },        {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }    ],    "offset": "0",    "limit": "2"}'),
+        JSON.parse('{    "total_count": 4,    "entries": [        {            "type": "folder",            "id": "409047868",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s another folder"        },        {            "type": "file",            "id": "409042810",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }    ],    "offset": "2",    "limit": "2"}')  
+      ]
+
+      # should return no files.
+      files = RubyBox::Folder.new(session, {'id' => 1}).files('foobar')
+      files.count.should == 0
+    end
+  end
+
+  describe '#folders' do
+    it "should only return items of type folder" do
+      RubyBox::Session.any_instance.stub(:request) { @items.pop }
+      session = RubyBox::Session.new('fake_key', 'fake_token')   
+      files = RubyBox::Folder.new(session, {'id' => 1}).folders
+      files.count.should == 1
+      files.first.kind_of?(RubyBox::Folder).should == true
     end
   end
 end
