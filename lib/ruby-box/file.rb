@@ -16,12 +16,12 @@ module RubyBox
     end
 
     def download
-  #    # url = "https://api.box.com/2.0/files/#{fitem.root_id}/data" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
-  #    url = "https://www.box.com/api/1.0/download/#{@session.auth_token}/#{id}"  #api v1.0 - this does work
-  #    uri = URI.parse(url)
-  #    request = Net::HTTP::Get.new( uri.request_uri )
-  #    raw = true
-  #    resp = @xport.do_http( uri, request, raw )
+      url = "https://api.box.com/2.0/files/#{id}/data" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
+      #url = "https://www.box.com/api/1.0/download/#{@session.auth_token}/#{id}"  #api v1.0 - this does work
+      uri = URI.parse(url)
+      request = Net::HTTP::Get.new( uri.request_uri )
+      raw = true
+      resp = @sesson.request( uri, request, raw )
     end
 
     def stream( path, opts={} )

@@ -1,12 +1,5 @@
 module RubyBox
   class Folder < Item
-
-    def self.root(session)
-      folder = Folder.new(session, {'id' => '0'})
-      folder.reload_meta
-      folder
-    end
-
     def items(item_limit=100, offset=0)
       Enumerator.new do |yielder|
         while true

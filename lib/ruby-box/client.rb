@@ -5,9 +5,19 @@ require 'net/http/post/multipart'
 require 'open-uri'
 
 module RubyBox
+  class Client
+    def initialize(session)
+      @session = session
+    end
 
-  API_URL = 'https://api.box.com/2.0'
-  UPLOAD_URL = 'https://upload.box.com/api/2.0'
+    def root_folder
+      folder = Folder.new(@session, {'id' => '0'})
+      folder.reload_meta
+      folder
+    end
+  end
+end
+
 =begin  
   class FFolder < FItem
     # return a new fitem.  The fitem.root_id is nil if no file found. 

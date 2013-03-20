@@ -9,7 +9,7 @@ module RubyBox
     def update
       @raw_item = reload_meta unless etag
 
-      url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/#{id}/content"
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
       uri = URI.parse(url)
 
       request = Net::HTTP::Put.new(uri.path, {
@@ -18,7 +18,7 @@ module RubyBox
       })
       request.body = JSON.dump(serialize)
 
-      @session.request(uri, request)
+      @raw_item = @session.request(uri, request)
     end
 
     def delete

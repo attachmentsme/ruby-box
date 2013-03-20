@@ -18,7 +18,7 @@ describe RubyBox::Folder do
   it "#root returns full root folder object" do
     RubyBox::Session.any_instance.stub(:request).and_return(@full_folder)
     session = RubyBox::Session.new('fake_key', 'fake_token')
-    root = RubyBox::Folder.root(session)
+    root = RubyBox::Client.new(session).root_folder(session)
     root.name.should == 'Pictures'
   end
 
@@ -27,7 +27,7 @@ describe RubyBox::Folder do
       item = JSON.parse('{    "total_count": 1,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        }   ],    "offset": "0",    "limit": "1"}')
       RubyBox::Session.any_instance.stub(:request).and_return(item)
       session = RubyBox::Session.new('fake_key', 'fake_token')   
-      item = RubyBox::Folder.root(session).items.first
+      item = RubyBox::Client.new(session).root_folder(session).items.first
       item.kind_of?(RubyBox::Folder).should == true
     end
 
@@ -35,7 +35,7 @@ describe RubyBox::Folder do
       item = JSON.parse('{    "total_count": 1,    "entries": [ {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }   ],    "offset": "0",    "limit": "1"}')
       RubyBox::Session.any_instance.stub(:request).and_return(item)
       session = RubyBox::Session.new('fake_key', 'fake_token')   
-      item = RubyBox::Folder.root(session).items.first
+      item = RubyBox::Client.new(session).root_folder(session).items.first
       item.kind_of?(RubyBox::File).should == true
     end
 
