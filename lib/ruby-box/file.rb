@@ -16,20 +16,17 @@ module RubyBox
     end
 
     def download
-      url = "https://api.box.com/2.0/files/#{id}/data" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
-      #url = "https://www.box.com/api/1.0/download/#{@session.auth_token}/#{id}"  #api v1.0 - this does work
+      #url = "https://api.box.com/2.0/#{resource_name}/#{id}/content" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
+      url = "#{LEGACY_DOWNLOAD_URL}//#{@session.auth_token}/#{id}"  #api v1.0 - this does work
       uri = URI.parse(url)
       request = Net::HTTP::Get.new( uri.request_uri )
       raw = true
-      resp = @sesson.request( uri, request, raw )
+      resp = @session.request( uri, request, raw )
     end
 
-    def stream( path, opts={} )
-   #   fitem = file( path )
-   #   return nil if fitem.nil?
-   #   # url = "https://api.box.com/2.0/files/#{fitem.root_id}/data" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
-   #   url = "https://www.box.com/api/1.0/download/#{@xport.auth_token}/#{fitem.root_id}"  #api v1.0 - this does work
-   #   @xport.do_stream( url, opts )
+    def stream( opts={} )
+      url = "#{LEGACY_DOWNLOAD_URL}/#{@session.auth_token}/#{id}"  #api v1.0 - this does work
+      @session.do_stream( url, opts )
     end
 
     def comments
