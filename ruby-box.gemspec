@@ -16,22 +16,8 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc"
   ]
-  s.files = [
-    ".document",
-    "Gemfile",
-    "Gemfile.lock",
-    "LICENSE.txt",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION",
-    "lib/ruby-box.rb",
-    "lib/ruby-box/api.rb",
-    "lib/ruby-box/exceptions.rb",
-    "ruby-box.gemspec",
-    "spec/api_spec.rb",
-    "spec/helper/account.example",
-    "spec/helper/account.rb"
-  ]
+
+  s.files = `git ls-files`.split($\)
   s.homepage = "http://github.com/jessemiller/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
