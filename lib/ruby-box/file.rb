@@ -50,6 +50,10 @@ module RubyBox
 
     private
 
+    def resource_name
+      'files'
+    end
+
     def prepare_upload(data, fname)
       UploadIO.new(data, "application/pdf", fname)
     end
