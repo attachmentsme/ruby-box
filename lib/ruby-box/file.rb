@@ -1,16 +1,6 @@
 module RubyBox
   class File < Item
 
-    def delete
-      url = "#{RubyBox::API_URL}/files/#{id}"
-      resp = @session.delete( url )
-    end
-    
-    def reload_meta
-      url = "#{RubyBox::API_URL}/files/#{id}"
-      @raw_item = @session.get( url )
-    end
-
     def put_data( data, fname )
       @raw_item = reload_meta unless etag
 
@@ -43,7 +33,7 @@ module RubyBox
     end
 
     def comments
-      url = "#{RubyBox::API_URL}/files/#{id}/comments"
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/comments"
       resp = @session.get( url )
       resp['entries'].map {|i| Comment.new(@session, i)}
     end
