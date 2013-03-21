@@ -1,5 +1,5 @@
 ruby-box
-________
+--------
 
 Mainted by: _Attachment.me_
 
