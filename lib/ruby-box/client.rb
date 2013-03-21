@@ -15,6 +15,10 @@ module RubyBox
       folder = Folder.new(@session, {'id' => '0'})
       folder.reload_meta
     end
+
+    def build_path(path)
+      path.split('/')
+    end
     
   end
 end
