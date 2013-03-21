@@ -16,7 +16,7 @@ module RubyBox
     end
 
     def parent
-      @raw_item = reload_meta unless @raw_item['parent']
+      reload_meta unless @raw_item['parent']
       @parent = RubyBox::Folder.new(@session, @raw_item['parent']) unless @parent
       @parent
     end
@@ -35,10 +35,11 @@ module RubyBox
         "folder_id" => parent.id
       })
       @raw_item = @session.request(uri, request)
+      self
     end
 
     def update_content( path )
-      @raw_item = reload_meta unless etag
+      reload_meta unless etag
 
       url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/#{id}/content"
       uri = URI.parse(url)
@@ -49,6 +50,7 @@ module RubyBox
       }, {"if-match" => etag })
 
       @raw_item = @session.request(uri, request)
+      self
     end
 
     private

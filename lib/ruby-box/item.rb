@@ -7,7 +7,7 @@ module RubyBox
     end
 
     def update
-      @raw_item = reload_meta unless etag
+      reload_meta unless etag
 
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
       uri = URI.parse(url)
@@ -29,6 +29,7 @@ module RubyBox
     def reload_meta
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
       @raw_item = @session.get( url )
+      self
     end
 
     def method_missing(method, *args, &block)

@@ -76,11 +76,10 @@ describe RubyBox::File do
 
   describe '#put_data' do
     it "should load full meta information if etag not present" do
-      RubyBox::Session.any_instance.stub(:request).and_return(@full_file)
+      RubyBox::Session.any_instance.should_receive(:request).twice.and_return(@full_file)
       session = RubyBox::Session.new('fake_key', 'fake_token')
       file = RubyBox::File.new(session, @mini_file)
       file.stub(:prepare_upload).and_return('fake data')
-      file.should_receive(:reload_meta).once.and_return(@full_file)
       file.update_content('data')
     end
   end
