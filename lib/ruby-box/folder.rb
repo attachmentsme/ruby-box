@@ -6,12 +6,7 @@ module RubyBox
           url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/items?limit=#{item_limit}&offset=#{offset}"
           resp = @session.get( url )
           resp['entries'].each do |entry|
-            case entry['type']
-            when 'folder'
-              yielder.yield(RubyBox::Folder.new(@session, entry))
-            when 'file'
-              yielder.yield(RubyBox::File.new(@session, entry))
-            end
+            yielder.yield(RubyBox::Item.factory(@session, entry))
           end
           offset += resp['entries'].count
           break if resp['offset'].to_i + resp['limit'].to_i >= resp['total_count'].to_i

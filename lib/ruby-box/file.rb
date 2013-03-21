@@ -15,12 +15,6 @@ module RubyBox
       @session.do_stream( url, opts )
     end
 
-    def parent
-      reload_meta unless @raw_item['parent']
-      @parent = RubyBox::Folder.new(@session, @raw_item['parent']) unless @parent
-      @parent
-    end
-
     def comments
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/comments"
       resp = @session.get( url )

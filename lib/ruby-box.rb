@@ -4,7 +4,9 @@ require 'ruby-box/session'
 require 'ruby-box/item'
 require 'ruby-box/file'
 require 'ruby-box/folder'
+require 'ruby-box/user'
 require 'ruby-box/comment'
+require 'ruby-box/discussion'
 require 'ruby-box/exceptions'
 
 module RubyBox

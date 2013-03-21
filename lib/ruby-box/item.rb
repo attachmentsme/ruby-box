@@ -46,11 +46,31 @@ module RubyBox
       # we may have a mini version of the object loaded, fix this.
       reload_meta if @raw_item[key].nil?
 
-      if RubyBox::ISO_8601_TEST.match(@raw_item[key].to_s)
+      if @raw_item[key].kind_of?(Hash)
+        return RubyBox::Item.factory(@session, @raw_item[key])
+      elsif RubyBox::ISO_8601_TEST.match(@raw_item[key].to_s)
         return Time.parse(@raw_item[key])
       else
         return @raw_item[key]
       end
+    end
+
+    protected
+
+    def self.factory(session, entry)
+      case entry['type']
+      when 'folder'
+        return RubyBox::Folder.new(session, entry)
+      when 'file'
+        return RubyBox::File.new(session, entry)
+      when 'comment'
+        return RubyBox::Comment.new(session, entry)        
+      when 'user'
+        return RubyBox::User.new(session, entry)        
+      when 'discussion'
+        return RubyBox::Discussion.new(session, entry)
+      end
+      entry
     end
 
     private
