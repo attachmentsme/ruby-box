@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc"
   ]
-
-  s.files = `git ls-files | sed 's/"//g'`.split($\)
+  s.files = `git ls-files`.gsub('"spec/fixtures/\351\201\240\345\277\227\346\225\231\346\216\210.jpg"', '').split($\)
   s.homepage = "http://github.com/jessemiller/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
