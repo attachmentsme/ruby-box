@@ -56,7 +56,7 @@ Folders
 ```ruby
 files = client.folder('/image_folder').files # all files in a folder.
 folders = client.root_folder.folders # all folders in the root directory.
-files_and_folders = client.folder('files').items
+files_and_folders = client.folder('files').items # all files and folders in /files
 ```
 
 * Creating a Folder:
