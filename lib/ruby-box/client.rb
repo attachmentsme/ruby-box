@@ -6,6 +6,7 @@ require 'open-uri'
 
 module RubyBox
   class Client
+
     def initialize(session)
       @session = session
     end
@@ -14,5 +15,6 @@ module RubyBox
       folder = Folder.new(@session, {'id' => '0'})
       folder.reload_meta
     end
+    
   end
 end

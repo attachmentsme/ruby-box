@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem "multipart-post", "~> 1.1.5"
+gem "oauth2"
 
 group :development do
   gem "rspec"

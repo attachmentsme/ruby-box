@@ -1,10 +1,26 @@
 module RubyBox  
   class Session
     attr_accessor :api_key, :auth_token
+
+    OAUTH2_URLS = {
+      :site => 'https://www.box.com',
+      :authorize_url => "/api/oauth2/authorize",
+      :token_url => "/api/oauth2/token"
+    }
     
-    def initialize(api_key, auth_token)
-      @api_key = api_key
-      @auth_token = auth_token
+    def initialize(opts={})
+      if opts[:access_token]
+        oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS)
+        @access_token = OAuth2::AccessToken.new(oauth2_client, opts[:access_token])
+      else # Support legacy API for historical reasons.
+        @api_key = opts[:api_key]
+        @auth_token = opts[:auth_token]
+      end
+    end
+
+    def authorize_url()
+      # /token
+      # /authorize
     end
     
     def build_auth_header
@@ -24,12 +40,20 @@ module RubyBox
     end
     
     def request(uri, request, raw=false)      
+
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.ssl_version = :SSLv3
       
-      request.add_field('Authorization', build_auth_header)
+      response = nil
+      if @access_token
+        request.add_field('Authorization', "Bearer #{@access_token.token}")
+      else
+        request.add_field('Authorization', build_auth_header)
+      end
+
       response = http.request(request)
+
       if response.is_a? Net::HTTPNotFound
         raise RubyBox::ObjectNotFound
       end
