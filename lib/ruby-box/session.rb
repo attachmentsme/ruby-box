@@ -11,9 +11,9 @@ module RubyBox
     }
     
     def initialize(opts={})
-      if opts[:access_token]
+      if opts[:client_id]
         @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS)
-        @access_token = OAuth2::AccessToken.new(oauth2_client, opts[:access_token])
+        @access_token = OAuth2::AccessToken.new(oauth2_client, opts[:access_token]) if opts[:access_token]
       else # Support legacy API for historical reasons.
         @api_key = opts[:api_key]
         @auth_token = opts[:auth_token]
@@ -91,7 +91,7 @@ module RubyBox
       case status / 100
       when 4
         raise(RubyBox::ItemNameInUse.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
-        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized"
+        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401        
         raise(RubyBox::RequestError.new(parsed_body), parsed_body["message"])
       when 5
         raise RubyBox::ServerError, parsed_body["message"]
