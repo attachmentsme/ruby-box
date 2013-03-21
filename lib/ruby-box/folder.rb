@@ -26,6 +26,12 @@ module RubyBox
       end
     end
 
+    def discussions
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/discussions"
+      resp = @session.get( url )
+      resp['entries'].map {|i| Discussion.new(@session, i)}
+    end
+
     def upload_file(filename, data)
       file = RubyBox::File.new(@session, {
         'name' => filename,
