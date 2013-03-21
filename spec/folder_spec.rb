@@ -22,6 +22,13 @@ describe RubyBox::Folder do
     root.name.should == 'Pictures'
   end
 
+  it "returns iso8601 format keys as a time object" do
+    RubyBox::Session.any_instance.stub(:request).and_return(@full_folder)
+    session = RubyBox::Session.new('fake_key', 'fake_token')
+    root = RubyBox::Client.new(session).root_folder
+    root.created_at.year.should == 2012
+  end
+
   describe '#items' do
     it "should return a folder object for folder items" do
       item = JSON.parse('{    "id": "0000001", "total_count": 1,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        }   ],    "offset": "0",    "limit": "1"}')

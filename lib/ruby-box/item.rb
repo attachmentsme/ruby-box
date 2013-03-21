@@ -1,3 +1,5 @@
+require 'time'
+
 module RubyBox
   class Item
 
@@ -28,7 +30,7 @@ module RubyBox
     end
 
     def reload_meta
-      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{@raw_item['id']}"
       @raw_item = @session.get( url )
       self
     end
@@ -38,13 +40,17 @@ module RubyBox
       
       # update @raw_item hash if this appears to be a setter.
       setter = method.to_s.end_with?('=')
-      key = key.slice(0...-1) if setter
+      key = key[0...-1] if setter
       @raw_item[key] = args[0] if setter and update_fields.include?(key)
       
       # we may have a mini version of the object loaded, fix this.
       reload_meta if @raw_item[key].nil?
 
-      return @raw_item[key]
+      if RubyBox::ISO_8601_TEST.match(@raw_item[key].to_s)
+        return Time.parse(@raw_item[key])
+      else
+        return @raw_item[key]
+      end
     end
 
     private
