@@ -10,7 +10,7 @@ Authorization
 
 RubyBox uses Box's OAuth2 Implementaton, Here are the steps involved in authorizing a client:
 
-1. Get the authorization url.
+__1)__ Get the authorization url.
 
 ```ruby
 require 'ruby-box'
@@ -23,13 +23,13 @@ session = RubyBox::Session.new({
 authorize_url = session.authorize_url('https://redirect-url-in-app-settings')
 ```
 
-2. After redirecting to the authorize_url, exchange the _code_ given for an _access\_token_
+__2)__ After redirecting to the authorize_url, exchange the _code_ given for an _access\_token_
 
 ```ruby
 session.get_access_token('code-returned-to-redirect_url')
 ```
 
-3. Create a client using a session initialized with the _access\_token_.
+__3)__ Create a client using a session initialized with the _access\_token_.
 
 ```ruby
 require 'ruby-box'
