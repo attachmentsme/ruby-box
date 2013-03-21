@@ -44,17 +44,12 @@ module RubyBox
     end
 
     def create_subfolder(name)
-=begin
-    def create( folder_name )
-      url = "https://api.box.com/2.0/folders"
+      url = "#{RubyBox::API_URL}/#{resource_name}"
       uri = URI.parse(url)
       request = Net::HTTP::Post.new( uri.request_uri )
-      request.body = { "name" => folder_name, "parent" => {"id" => @root_id} }.to_json
-      resp = @xport.do_http( uri, request )
-      fid = resp["id"] if resp["name"] == folder_name
-      FFolder.new( @xport, fid )
-    end
-=end
+      request.body = JSON.dump({ "name" => name, "parent" => {"id" => id} })
+      resp = @session.request(uri, request)
+      RubyBox::Folder.new(@session, resp)
     end
 
     private
