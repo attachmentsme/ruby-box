@@ -84,6 +84,34 @@ discussion.comments.each {|comment| p comment.message}
 Files
 =====
 
+* Fetching a file's meta information.
+
+```ruby
+file = client.file('/image_folder/an-image.jpg')
+p file.name
+p file.created_at
+```
+
+* Uploading a file to a folder.
+
+```ruby
+file = client.upload_file('./LICENSE.txt', '/license_folder')
+```
+
+* Downloading a file.
+
+```ruby
+f = open('./LOCAL.txt', 'w+')
+f.write( client.file('/license_folder/LICENSE.txt').download )
+f.close()
+```
+
+* Deleting a file.
+
+```ruby
+client.file('/license_folder/LICENSE.txt').delete
+```
+
 Search
 ======
 
