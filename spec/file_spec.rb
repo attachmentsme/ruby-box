@@ -81,7 +81,7 @@ describe RubyBox::File do
       file = RubyBox::File.new(session, @mini_file)
       file.stub(:prepare_upload).and_return('fake data')
       file.should_receive(:reload_meta).once.and_return(@full_file)
-      file.put_data('data', 'foobar.txt')
+      file.update_content('data')
     end
   end
 

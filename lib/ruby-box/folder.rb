@@ -20,7 +20,20 @@ module RubyBox
     end
 
     def upload_file(filename, data)
+      file = RubyBox::File.new(@session, {
+        'name' => filename,
+        'parent' => {'id' => id}
+      })
 
+      begin
+        resp = file.upload_content(data) #write a new file. If there is a conflict, update the conflicted file.
+      rescue RubyBox::ItemNameInUse => e
+        file = RubyBox::File.new(@session, {
+          'id' => e['context_info']['conflicts'][0]['id']
+        })
+        data.rewind
+        resp = file_fitem.update_content( data )
+      end
     end
 
     def files(name=nil, item_limit=100, offset=0)
