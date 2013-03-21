@@ -16,7 +16,7 @@ module RubyBox
       resp['entries'].map {|i| Comment.new(@session, i)}
     end
 
-    def upload_content( path )
+    def upload_content( data )
       url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/content"
       uri = URI.parse(url)
       request = Net::HTTP::Post::Multipart.new(uri.path, {
@@ -27,7 +27,7 @@ module RubyBox
       self
     end
 
-    def update_content( path )
+    def update_content( data )
 
       url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/#{id}/content"
       uri = URI.parse(url)

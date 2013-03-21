@@ -88,7 +88,6 @@ module RubyBox
         msg = body.nil? || body.empty? ? "no data returned" : body
         parsed_body = { "message" =>  msg }
       end
-      
       case status / 100
       when 4
         raise(RubyBox::ItemNameInUse.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
