@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.rdoc"
+    "README.markdown"
   ]
   s.files = `git ls-files`.gsub('"spec/fixtures/\351\201\240\345\277\227\346\225\231\346\216\210.jpg"', '').split($\)
   s.homepage = "http://github.com/jessemiller/ruby-box"

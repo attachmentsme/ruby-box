@@ -112,6 +112,13 @@ f.close()
 client.file('/license_folder/LICENSE.txt').delete
 ```
 
+* Displaying comments on a file.
+
+```ruby
+comments = client.file('/iamge_folder/an-image.jpg').comments
+
+```
+
 Search
 ======
 
