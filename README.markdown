@@ -1,9 +1,9 @@
 ruby-box
 --------
 
-Mainted by: [Attachment.me](https://attachments.me)
+Mainted by: [Attachments.me](https://attachments.me)
 
-RubyBox provides a simple, chainable, feature-rich, client for [Box's 2.0 API](http://developers.box.com/docs/).
+RubyBox provides a simple, chainable, feature-rich client for [Box's 2.0 API](http://developers.box.com/docs/).
 
 Authorization
 =============
@@ -59,7 +59,7 @@ folders = client.root_folder.folders # all folders in the root directory.
 files_and_folders = client.folder('files').items # all files and folders in /files
 ```
 
-* Creating a Folder:
+* Creating a folder:
 
 ```ruby
 client.folder('image_folder').create_subfolder('subfolder')
