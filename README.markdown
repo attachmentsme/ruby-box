@@ -115,6 +115,15 @@ client.file('/license_folder/LICENSE.txt').delete
 Search
 ======
 
+You can use RubyBox's search method to return files and folders that match a given query.
+
+```ruby
+items = client.search('image')
+items.each do |item|
+    p "type=#{item.type} name=#{item.name}"
+end
+```
+
 Contributors
 ------------
 
@@ -125,6 +134,8 @@ Contributors
 
 Contributing to ruby-box
 -----------------------
+
+RubyBox does not yet support all of Box's API Version 2.0 functionality, be liberal with your contributions.
  
 * Rename account.example to account.yml and fill in your Box credentials
 * Type bundle install
@@ -138,4 +149,3 @@ Copyright
 
 Copyright (c) 2012 Attachments.me. See LICENSE.txt for
 further details.
-
