@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors = ["Benjamin Coe", "Jesse Miller", "Larry Kang"]
   s.date = "2013-03-02"
   s.description = "ruby gem for box.com 2.0 api"
-  s.email = "bencoe@gmail.com"
+  s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
