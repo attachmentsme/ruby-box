@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
 
-  s.files = `git ls-files`.split($\)
+  s.files = `git ls-files | sed 's/"//g'`.split($\)
   s.homepage = "http://github.com/jessemiller/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
