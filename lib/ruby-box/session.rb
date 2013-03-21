@@ -1,6 +1,8 @@
+require 'oauth2'
+
 module RubyBox  
   class Session
-    attr_accessor :api_key, :auth_token
+    attr_accessor :api_key, :auth_token, :oauth2_client, :access_token
 
     OAUTH2_URLS = {
       :site => 'https://www.box.com',
@@ -10,7 +12,7 @@ module RubyBox
     
     def initialize(opts={})
       if opts[:access_token]
-        oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS)
+        @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS)
         @access_token = OAuth2::AccessToken.new(oauth2_client, opts[:access_token])
       else # Support legacy API for historical reasons.
         @api_key = opts[:api_key]
@@ -18,9 +20,14 @@ module RubyBox
       end
     end
 
-    def authorize_url()
-      # /token
-      # /authorize
+    def authorize_url(redirect_uri)
+      @redirect_uri = redirect_uri
+      @oauth2_client.auth_code.authorize_url(:redirect_uri => redirect_uri)
+    end
+
+    def get_access_token(code)
+      @access_token = @oauth2_client.auth_code.get_token(code, { :redirect_uri => @redirect_uri, :token_method => :post })
+      @access_token.token
     end
     
     def build_auth_header
@@ -45,7 +52,6 @@ module RubyBox
       http.use_ssl = true
       http.ssl_version = :SSLv3
       
-      response = nil
       if @access_token
         request.add_field('Authorization', "Bearer #{@access_token.token}")
       else
@@ -61,11 +67,18 @@ module RubyBox
     end
 
     def do_stream(url, opts)
-      open(url, {
-        'Authorization' => build_auth_header,
+      params = {
         :content_length_proc => opts[:content_length_proc],
-        :progress_proc => opts[:progress_proc]
-      })
+        :progress_proc => opts[:progress_proc]        
+      }
+
+      if @access_token
+        params['Authorization'] = "Bearer #{@access_token.token}"
+      else
+        params['Authorization'] = build_auth_header
+      end
+
+      open(url, params)
     end
     
     def handle_errors( status, body, raw )

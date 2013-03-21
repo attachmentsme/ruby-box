@@ -2,16 +2,11 @@ module RubyBox
   class File < Item
 
     def download
-      #url = "https://api.box.com/2.0/#{resource_name}/#{id}/content" # bug: http://community.box.com/boxnet/topics/box_com_cant_down_file_used_api
-      url = "#{LEGACY_DOWNLOAD_URL}//#{@session.auth_token}/#{id}"  #api v1.0 - this does work
-      uri = URI.parse(url)
-      request = Net::HTTP::Get.new( uri.request_uri )
-      raw = true
-      resp = @session.request( uri, request, raw )
+      resp = stream.read
     end
 
     def stream( opts={} )
-      url = "#{LEGACY_DOWNLOAD_URL}/#{@session.auth_token}/#{id}"  #api v1.0 - this does work
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/content"
       @session.do_stream( url, opts )
     end
 
@@ -22,7 +17,7 @@ module RubyBox
     end
 
     def upload_content( path )
-      url = "https://upload.box.com/api/2.0/#{resource_name}/content"
+      url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/content"
       uri = URI.parse(url)
       request = Net::HTTP::Post::Multipart.new(uri.path, {
         "filename" => UploadIO.new(data, "application/pdf", name),
