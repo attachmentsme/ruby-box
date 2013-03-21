@@ -1,9 +1,9 @@
 ruby-box
 --------
 
-Mainted by: [https://attachments.me](Attachment.me)
+Mainted by: [Attachment.me](https://attachments.me)
 
-RubyBox provides a simple, chainable, feature-rich, client for [http://developers.box.com/docs/](Box's 2.0 API).
+RubyBox provides a simple, chainable, feature-rich, client for [Box's 2.0 API](http://developers.box.com/docs/).
 
 Authorization
 =============
