@@ -19,6 +19,10 @@ module RubyBox
       end
     end
 
+    def upload_file(filename, data)
+
+    end
+
     def files(name=nil, item_limit=100, offset=0)
       items(item_limit, offset).select do |item|
         item.kind_of? RubyBox::File and (name.nil? or item.name == name)

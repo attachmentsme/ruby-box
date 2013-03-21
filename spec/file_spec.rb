@@ -28,6 +28,21 @@ describe RubyBox::File do
     file.size.should == 629644
   end
 
+  describe '#parent' do
+    it 'should return parent folder' do
+      session = RubyBox::Session.new('fake_key', 'fake_token')
+      file = RubyBox::File.new(session, @full_file)
+      file.parent.name.should == 'Pictures'
+    end
+
+    it 'should reload_meta data if necessary before loading parent' do
+      RubyBox::Session.any_instance.stub(:request).and_return(@full_file)
+      session = RubyBox::Session.new('fake_key', 'fake_token')
+      file = RubyBox::File.new(session, @mini_file)
+      file.parent.name.should == 'Pictures'
+    end
+  end
+
   describe '#update' do
     it 'should update files raw_item hash if name or description changed' do
       RubyBox::Session.any_instance.stub(:request).and_return(@full_file)

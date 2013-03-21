@@ -9,7 +9,7 @@ module RubyBox
 
       request = Net::HTTP::Post::Multipart.new(uri.path, {
         "filename" => prepare_upload(data, fname),
-        "folder_id" => id
+        "folder_id" => parent.id
       }, {"if-match" => etag })
 
       @session.request(uri, request)
@@ -29,11 +29,27 @@ module RubyBox
       @session.do_stream( url, opts )
     end
 
+    def parent
+      @raw_item = reload_meta unless @raw_item['parent']
+      @parent = RubyBox::Folder.new(@session, @raw_item['parent']) unless @parent
+      @parent
+    end
+
     def comments
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/comments"
       resp = @session.get( url )
       resp['entries'].map {|i| Comment.new(@session, i)}
     end
+
+    def put_new_data( fname, data, folder_id )
+      url = "https://upload.box.com/api/2.0/#{resource_name}/content"
+      uri = URI.parse(url)
+      request = Net::HTTP::Post::Multipart.new(uri.path, {
+        "filename" => UploadIO.new(data, "application/pdf", fname),
+        "folder_id" => parent.id
+      })
+      @session.request(uri, request)
+    end  
 
     private
 
