@@ -63,5 +63,9 @@ module RubyBox
     def resource_name
       'folders'
     end
+
+    def update_fields
+      ['name', 'description']
+    end
   end
 end
