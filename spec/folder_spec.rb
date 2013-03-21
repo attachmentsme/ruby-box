@@ -24,7 +24,7 @@ describe RubyBox::Folder do
 
   describe '#items' do
     it "should return a folder object for folder items" do
-      item = JSON.parse('{    "total_count": 1,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        }   ],    "offset": "0",    "limit": "1"}')
+      item = JSON.parse('{    "id": "0000001", "total_count": 1,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        }   ],    "offset": "0",    "limit": "1"}')
       RubyBox::Session.any_instance.stub(:request).and_return(item)
       session = RubyBox::Session.new('fake_key', 'fake_token')   
       item = RubyBox::Client.new(session).root_folder.items.first
@@ -32,7 +32,7 @@ describe RubyBox::Folder do
     end
 
     it "should return a file object for file items" do
-      item = JSON.parse('{    "total_count": 1,    "entries": [ {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }   ],    "offset": "0",    "limit": "1"}')
+      item = JSON.parse('{    "id": "0000001", "total_count": 1,    "entries": [ {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }   ],    "offset": "0",    "limit": "1"}')
       RubyBox::Session.any_instance.stub(:request).and_return(item)
       session = RubyBox::Session.new('fake_key', 'fake_token')   
       item = RubyBox::Client.new(session).root_folder.items.first
@@ -79,6 +79,7 @@ describe RubyBox::Folder do
       files = RubyBox::Folder.new(session, {'id' => 1}).files('foobar')
       files.count.should == 0
     end
+
   end
 
   describe '#folders' do

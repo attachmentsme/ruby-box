@@ -19,6 +19,7 @@ module RubyBox
       request.body = JSON.dump(serialize)
 
       @raw_item = @session.request(uri, request)
+      self
     end
 
     def delete
@@ -40,6 +41,9 @@ module RubyBox
       key = key.slice(0...-1) if setter
       @raw_item[key] = args[0] if setter and update_fields.include?(key)
       
+      # we may have a mini version of the object loaded, fix this.
+      reload_meta if @raw_item[key].nil?
+
       return @raw_item[key]
     end
 

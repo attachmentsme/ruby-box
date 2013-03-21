@@ -13,7 +13,6 @@ module RubyBox
     def root_folder
       folder = Folder.new(@session, {'id' => '0'})
       folder.reload_meta
-      folder
     end
   end
 end

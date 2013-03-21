@@ -19,12 +19,11 @@ describe RubyBox::File do
   end
 
   it "should load all meta information if reload_meta is called" do
-    RubyBox::Session.any_instance.stub(:request).and_return(@full_file)
+    # request is called once when reload_meta is automatically executed.
+    RubyBox::Session.any_instance.should_receive(:request).once.and_return(@full_file)
     session = RubyBox::Session.new('fake_key', 'fake_token')
 
     file = RubyBox::File.new(session, @mini_file)
-    file.size.should == nil
-    file.reload_meta
     file.size.should == 629644
   end
 

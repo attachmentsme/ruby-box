@@ -19,6 +19,18 @@ module RubyBox
       end
     end
 
+    def files(name=nil, item_limit=100, offset=0)
+      items(item_limit, offset).select do |item|
+        item.kind_of? RubyBox::File and (name.nil? or item.name == name)
+      end
+    end
+
+    def folders(name=nil, item_limit=100, offset=0)
+      items(item_limit, offset).select do |item|
+        item.kind_of? RubyBox::Folder and (name.nil? or item.name == name)
+      end
+    end
+
     def upload_file(filename, data)
       file = RubyBox::File.new(@session, {
         'name' => filename,
@@ -33,18 +45,6 @@ module RubyBox
         })
         data.rewind
         resp = file.update_content( data )
-      end
-    end
-
-    def files(name=nil, item_limit=100, offset=0)
-      items(item_limit, offset).select do |item|
-        item.kind_of? RubyBox::File and (name.nil? or item.name == name)
-      end
-    end
-
-    def folders(name=nil, item_limit=100, offset=0)
-      items(item_limit, offset).select do |item|
-        item.kind_of? RubyBox::Folder and (name.nil? or item.name == name)
       end
     end
 

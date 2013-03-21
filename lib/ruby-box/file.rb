@@ -39,7 +39,6 @@ module RubyBox
     end
 
     def update_content( path )
-      reload_meta unless etag
 
       url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/#{id}/content"
       uri = URI.parse(url)
