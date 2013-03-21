@@ -27,17 +27,17 @@ module RubyBox
       resp['entries'].map {|i| Comment.new(@session, i)}
     end
 
-    def upload_content( data )
+    def upload_content( path )
       url = "https://upload.box.com/api/2.0/#{resource_name}/content"
       uri = URI.parse(url)
       request = Net::HTTP::Post::Multipart.new(uri.path, {
         "filename" => UploadIO.new(data, "application/pdf", name),
         "folder_id" => parent.id
       })
-      @session.request(uri, request)
+      @raw_item = @session.request(uri, request)
     end
 
-    def update_content( data )
+    def update_content( path )
       @raw_item = reload_meta unless etag
 
       url = "#{RubyBox::UPLOAD_URL}/#{resource_name}/#{id}/content"
@@ -48,7 +48,7 @@ module RubyBox
         "folder_id" => parent.id
       }, {"if-match" => etag })
 
-      @session.request(uri, request)
+      @raw_item = @session.request(uri, request)
     end
 
     private

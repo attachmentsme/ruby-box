@@ -32,7 +32,7 @@ module RubyBox
           'id' => e['context_info']['conflicts'][0]['id']
         })
         data.rewind
-        resp = file_fitem.update_content( data )
+        resp = file.update_content( data )
       end
     end
 
