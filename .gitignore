@@ -48,3 +48,5 @@ pkg
 
 # For rubinius:
 #*.rbc
+*.gem
+.DS_Store

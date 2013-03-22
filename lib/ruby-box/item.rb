@@ -1,0 +1,83 @@
+require 'time'
+
+module RubyBox
+  class Item
+
+    def initialize( session, raw_item )
+      @session = session
+      @raw_item = raw_item
+    end
+
+    def update
+      reload_meta unless etag
+
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
+      uri = URI.parse(url)
+
+      request = Net::HTTP::Put.new(uri.path, {
+        "if-match" => etag,
+        "Content-Type" => 'application/json'
+      })
+      request.body = JSON.dump(serialize)
+
+      @raw_item = @session.request(uri, request)
+      self
+    end
+
+    def delete
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
+      resp = @session.delete( url )
+    end
+
+    def reload_meta
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{@raw_item['id']}"
+      @raw_item = @session.get( url )
+      self
+    end
+
+    def method_missing(method, *args, &block)
+      key = method.to_s
+      
+      # update @raw_item hash if this appears to be a setter.
+      setter = method.to_s.end_with?('=')
+      key = key[0...-1] if setter
+      @raw_item[key] = args[0] if setter and update_fields.include?(key)
+      
+      # we may have a mini version of the object loaded, fix this.
+      reload_meta if @raw_item[key].nil?
+
+      if @raw_item[key].kind_of?(Hash)
+        return RubyBox::Item.factory(@session, @raw_item[key])
+      elsif RubyBox::ISO_8601_TEST.match(@raw_item[key].to_s)
+        return Time.parse(@raw_item[key])
+      else
+        return @raw_item[key]
+      end
+    end
+
+    protected
+
+    def self.factory(session, entry)
+      case entry['type']
+      when 'folder'
+        return RubyBox::Folder.new(session, entry)
+      when 'file'
+        return RubyBox::File.new(session, entry)
+      when 'comment'
+        return RubyBox::Comment.new(session, entry)        
+      when 'user'
+        return RubyBox::User.new(session, entry)        
+      when 'discussion'
+        return RubyBox::Discussion.new(session, entry)
+      end
+      entry
+    end
+
+    private
+
+    def serialize
+      update_fields.inject({}) {|hash, field| hash[field] = @raw_item[field]; hash}
+    end
+
+  end
+end

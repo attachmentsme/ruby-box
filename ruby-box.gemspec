@@ -5,33 +5,18 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "0.0.14"
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jesse Miller"]
+  s.authors = ["Benjamin Coe", "Jesse Miller", "Larry Kang"]
   s.date = "2013-03-02"
   s.description = "ruby gem for box.com 2.0 api"
-  s.email = "millerjesse@gmail.com"
+  s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.rdoc"
+    "README.markdown"
   ]
-  s.files = [
-    ".document",
-    "Gemfile",
-    "Gemfile.lock",
-    "LICENSE.txt",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION",
-    "lib/ruby-box.rb",
-    "lib/ruby-box/api.rb",
-    "lib/ruby-box/exceptions.rb",
-    "ruby-box.gemspec",
-    "spec/api_spec.rb",
-    "spec/helper/account.example",
-    "spec/helper/account.rb"
-  ]
+  s.files = `git ls-files`.gsub('"spec/fixtures/\351\201\240\345\277\227\346\225\231\346\216\210.jpg"', '').split($\)
   s.homepage = "http://github.com/jessemiller/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
