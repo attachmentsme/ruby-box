@@ -27,6 +27,16 @@ module RubyBox
       folder.files(file_name).first if folder
     end
 
+    def download(path)
+      file = file(path)
+      file.download if file
+    end
+
+    def stream(path, opts={})
+      file = file(path)
+      file.stream(opts) if file
+    end
+
     def search(query, item_limit=100, offset=0)
       Enumerator.new do |yielder|
         while true

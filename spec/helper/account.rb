@@ -6,4 +6,3 @@ begin
 rescue
   p "create an account.yml file with your credentials to run integration tests."
 end
-

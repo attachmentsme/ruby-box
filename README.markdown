@@ -115,8 +115,10 @@ client.file('/license_folder/LICENSE.txt').delete
 * Displaying comments on a file.
 
 ```ruby
-comments = client.file('/iamge_folder/an-image.jpg').comments
-
+comments = client.file('/image_folder/an-image.jpg').comments
+comments.each do |comment|
+    p comment.message
+end
 ```
 
 Search

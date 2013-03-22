@@ -23,7 +23,13 @@ module RubyBox
         "filename" => UploadIO.new(data, "application/pdf", name),
         "folder_id" => parent.id
       })
-      @raw_item = @session.request(uri, request)
+
+      resp = @session.request(uri, request)
+      if resp['entries']
+        @raw_item = resp['entries'][0]
+      else
+        @raw_item = resp
+      end
       self
     end
 
@@ -37,7 +43,12 @@ module RubyBox
         "folder_id" => parent.id
       }, {"if-match" => etag })
 
-      @raw_item = @session.request(uri, request)
+      resp = @session.request(uri, request)
+      if resp['entries']
+        @raw_item = resp['entries'][0]
+      else
+        @raw_item = resp
+      end
       self
     end
 
