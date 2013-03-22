@@ -5,110 +5,107 @@ require 'ruby-box'
 require 'webmock/rspec'
 
 describe RubyBox do
-=begin
   before do
+    next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+
     WebMock.allow_net_connect!
     
-    xport = RubyBox::Xport.new(ACCOUNT['api_key'], ACCOUNT['auth_token'])
-    @folder = RubyBox::FFolder.new( xport )
-    @user_api = RubyBox::UserAPI.new( xport )
-    @test_file_path = "./spec/кузнецкий_105_а_№2.test"
+    @session = RubyBox::Session.new({
+      api_key: ACCOUNT['api_key'],
+      auth_token: ACCOUNT['auth_token']
+    })
+
+    @client = RubyBox::Client.new(@session)
   end
     
-  describe RubyBox::FFolder do
+  describe RubyBox::Session do
     it "raises an AuthError if not client auth fails" do
-      xport = RubyBox::Xport.new(ACCOUNT['api_key'], ACCOUNT['auth_token'] + 'x')
-      @bad_folder = RubyBox::FFolder.new( xport )    
-      lambda {@bad_folder.list}.should raise_error( RubyBox::AuthError )
+      next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+
+      session = RubyBox::Session.new({
+        api_key: 'bad-key',
+        auth_token: 'bad-token'
+      })
+
+      @bad_client = RubyBox::Client.new(session)
+
+      lambda {@bad_client.root_folder}.should raise_error( RubyBox::AuthError )
     end
     
     it "raises a RequestError if a badly formed request detected by the server" do
-      stub_request(:get, "https://api.box.com/2.0/folders/0/items").to_return(:status => 401, :body => '{"type": "error", "status": 401, "message": "baddd req"}', :headers => {})
-      lambda {@folder.list}.should raise_error( RubyBox::RequestError ) 
+      next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+      stub_request(:get, "https://api.box.com/2.0/folders/0").to_return(:status => 401, :body => '{"type": "error", "status": 401, "message": "baddd req"}', :headers => {})
+      lambda {@client.root_folder}.should raise_error( RubyBox::AuthError ) 
     end
-    
+
     it "raises a ServerError if the server raises a 500 error" do
-      stub_request(:get, "https://api.box.com/2.0/folders/0/items").to_return(:status => 503, :body => '{"type": "error", "status": 503, "message": "We messed up! - Box.com"}', :headers => {})
-      lambda {@folder.list}.should raise_error( RubyBox::ServerError )
+      next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+      stub_request(:get, "https://api.box.com/2.0/folders/0").to_return(:status => 503, :body => '{"type": "error", "status": 503, "message": "We messed up! - Box.com"}', :headers => {})
+      lambda {@client.root_folder}.should raise_error( RubyBox::ServerError )
     end
   end
-  
-  describe RubyBox::FFolder do
-    describe '#list' do
-      it "returns list of items in the root folder if no arguments given" do
-        response = @folder.list
-        response["total_count"].should eq(6)
-        response["entries"].any? do |e|
-          e["type"] == "folder" && 
-          e["id"]   == "318810303" &&
-          e["name"] == "ruby-box_gem_testing"
+
+  describe RubyBox::Client do
+    describe '#root_folder' do
+      it "#items returns a lits of items in the root folder" do
+        next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+        items = @client.root_folder.items.to_a
+        items.count.should == 6
+        items.any? do |item|
+          item.type == "folder" && 
+          item.id   == "318810303" &&
+          item.name == "ruby-box_gem_testing"
         end.should == true
       end
       
       it "returns list of items in the folder id passed in" do
-        @folder.root_id = 318810303
-        response = @folder.list
-        response["total_count"].should eq(4)
-        response["entries"].any? do |e|
-          e["type"] == "file" && 
-          e["id"]   == "2550686921" &&
-          e["name"] == "2513582219_03fb9b67db_b.jpg"
+        next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+        folder = RubyBox::Folder.new(@session, {'id' => '318810303'})
+        items = folder.items.to_a
+        items.count.should == 3
+        items.any? do |item|
+          item.type == "file" && 
+          item.id   == "2550686921" &&
+          item.name == "2513582219_03fb9b67db_b.jpg"
         end.should == true
-      end
-    
-      it "returns appropriately if the path does not exist" do 
-        @folder.root_id = 207492335
-        expect { @folder.list }.to raise_error(RubyBox::ObjectNotFound)
       end
     end
     
     describe '#file' do
       it "finds the id of a file" do
-        @folder.root_id = 318810303
-        ffile = @folder.file( '2513582219_03fb9b67db_b.jpg' )
-        ffile.root_id.should == "2550686921"
-      end
-      
-      it "returns a file with nil root_id if not found" do
-        @folder.root_id = 318810303
-        ffile = @folder.file( 'doesntexist.jpg' )
-        ffile.root_id.should be_nil
-      end
-    end
-        
-    describe '#folder' do
-      it "finds the id of a folder" do
-        fitem = @folder.folder( 'ruby-box_gem_testing' )
-        fitem.root_id.should eq "318810303"
-      end
-
-      it "returns nil if the folder doesnt exist" do
-        fitem = @folder.folder( 'DoesntExist' )
-        fitem.root_id.should eq nil
-      end    
+        next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
+        folder = RubyBox::Folder.new(@session, {'id' => '318810303'})
+        file = folder.files( '2513582219_03fb9b67db_b.jpg' ).first
+        file.id.should == "2550686921"
+      end      
     end
     
     describe '#create' do
       it "creates a folder" do
-        folder = @user_api.folder('/ruby-box_gem_testing/new_folder_created')
-        folder.delete if folder
+        next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
 
-        @folder = @user_api.folder('/ruby-box_gem_testing')
-        folder = @folder.create( 'new_folder_created' )
-        folder.root_id.should_not be_nil
+        folder = @client.folder('/ruby-box_gem_testing')
+        subfolder = folder.create_subfolder( 'new_folder_created' )
+        subfolder.id.should_not == nil
+
+        subfolder.delete
       end
 
       it "creates a folder with special chars in the name" do
-        folder = @user_api.folder('/ruby-box_gem_testing/!@#$%^&$$()')
-        folder.delete if folder
+        next unless ACCOUNT['api_key'] # skip these tests if accout.yml does not exist.
 
-        @folder = @user_api.folder('/ruby-box_gem_testing')
-        folder = @folder.create( '!@#$%^&$$()' )
-        folder.root_id.should_not be_nil
+     #   folder = @user_api.folder('/ruby-box_gem_testing/!@#$%^&$$()')
+     #   folder.delete if folder
+
+#        @folder = @user_api.folder('/ruby-box_gem_testing')
+ #       folder = @folder.create( '!@#$%^&$$()' )
+  #      folder.root_id.should_not be_nil
       end
     end
+
   end
 
+=begin
   describe RubyBox::UserAPI do
     describe '#list' do
       it "returns list of items in the folder path passed in" do
