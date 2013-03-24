@@ -1,6 +1,8 @@
 module RubyBox
   class File < Item
 
+    has_many :comments
+
     def download
       resp = stream.read
     end
@@ -8,12 +10,6 @@ module RubyBox
     def stream( opts={} )
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/content"
       @session.do_stream( url, opts )
-    end
-
-    def comments
-      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/comments"
-      resp = @session.get( url )
-      resp['entries'].map {|i| Comment.new(@session, i)}
     end
 
     def upload_content( data )
