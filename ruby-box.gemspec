@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     "README.markdown"
   ]
   s.files = `git ls-files`.gsub('"spec/fixtures/\351\201\240\345\277\227\346\225\231\346\216\210.jpg"', '').split($\)
-  s.homepage = "http://github.com/jessemiller/ruby-box"
+  s.homepage = "http://github.com/attachmentsme/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
