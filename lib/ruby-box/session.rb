@@ -2,7 +2,6 @@ require 'oauth2'
 
 module RubyBox  
   class Session
-    attr_accessor :api_key, :auth_token, :oauth2_client, :access_token
 
     OAUTH2_URLS = {
       :site => 'https://www.box.com',
@@ -13,7 +12,7 @@ module RubyBox
     def initialize(opts={})
       if opts[:client_id]
         @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS)
-        @access_token = OAuth2::AccessToken.new(oauth2_client, opts[:access_token]) if opts[:access_token]
+        @access_token = OAuth2::AccessToken.new(@oauth2_client, opts[:access_token]) if opts[:access_token]
       else # Support legacy API for historical reasons.
         @api_key = opts[:api_key]
         @auth_token = opts[:auth_token]
@@ -26,8 +25,12 @@ module RubyBox
     end
 
     def get_access_token(code)
-      @access_token = @oauth2_client.auth_code.get_token(code, { :redirect_uri => @redirect_uri, :token_method => :post })
-      @access_token.token
+      @access_token = @oauth2_client.auth_code.get_token(code)
+    end
+
+    def refresh_token(refresh_token)
+      refresh_access_token_obj = OAuth2::AccessToken.new(@oauth2_client, @access_token.token, {'refresh_token' => refresh_token})
+      @access_token = refresh_access_token_obj.refresh!
     end
     
     def build_auth_header
