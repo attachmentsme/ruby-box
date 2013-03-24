@@ -89,6 +89,16 @@ describe RubyBox::Folder do
 
   end
 
+  describe '#discussions' do
+    it "should return all the discussions surrounding a folder" do
+      item = JSON.parse('{    "id": "0000001", "total_count": 1,    "entries": [ {            "type": "discussion",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }   ],    "offset": "0",    "limit": "1"}')
+      RubyBox::Session.any_instance.stub(:request).and_return(item)
+      session = RubyBox::Session.new
+      item = RubyBox::Client.new(session).root_folder.discussions.first
+      item.kind_of?(RubyBox::Discussion).should == true
+    end
+  end
+
   describe '#folders' do
     it "should only return items of type folder" do
       RubyBox::Session.any_instance.stub(:request) { @items.pop }

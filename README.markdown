@@ -26,7 +26,12 @@ authorize_url = session.authorize_url('https://redirect-url-in-app-settings')
 __2)__ After redirecting to the authorize_url, exchange the _code_ given for an _access\_token_
 
 ```ruby
-session.get_access_token('code-returned-to-redirect_url')
+@token = session.get_access_token('code-returned-to-redirect_url')
+p '@token.token' # the access token.
+p '@token.refresh_token' # token that can be exchanged for a new access_token once the access_token expires.
+
+# refreshing token.
+@token = session.refresh_token('refresh-token-string')
 ```
 
 __3)__ Create a client using a session initialized with the _access\_token_.

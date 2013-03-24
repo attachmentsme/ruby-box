@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Coe", "Jesse Miller", "Larry Kang"]
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     "README.markdown"
   ]
   s.files = `git ls-files`.gsub('"spec/fixtures/\351\201\240\345\277\227\346\225\231\346\216\210.jpg"', '').split($\)
-  s.homepage = "http://github.com/jessemiller/ruby-box"
+  s.homepage = "http://github.com/attachmentsme/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
