@@ -11,7 +11,7 @@ module RubyBox
     
     def initialize(opts={})
       if opts[:client_id]
-        @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS)
+        @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS.dup)
         @access_token = OAuth2::AccessToken.new(@oauth2_client, opts[:access_token]) if opts[:access_token]
       else # Support legacy API for historical reasons.
         @api_key = opts[:api_key]
