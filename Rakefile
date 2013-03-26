@@ -18,12 +18,12 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "ruby-box"
-  gem.homepage = "http://github.com/jessemiller/ruby-box"
+  gem.homepage = "http://github.com/attachmentsme/ruby-box"
   gem.license = "MIT"
   gem.summary = %Q{ruby gem for box.com 2.0 api}
   gem.description = %Q{ruby gem for box.com 2.0 api}
-  gem.email = "millerjesse@gmail.com"
-  gem.authors = ["Jesse Miller"]
+  gem.email = "ben@attachments.me"
+  gem.authors = ["Attachments.me"]
   gem.files.exclude 'spec/*.test'
   # dependencies defined in Gemfile
 end
