@@ -42,7 +42,7 @@ PLATFORMS
 DEPENDENCIES
   bundler
   jeweler (~> 1.6.4)
-  multipart-post (~> 1.1.5)
+  multipart-post
   oauth2
   rspec
   webmock
