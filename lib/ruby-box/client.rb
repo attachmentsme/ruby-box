@@ -56,12 +56,16 @@ module RubyBox
       folder_names = split_path(path)
       folder_names.each do |folder_name|
         new_folder = folder.folders(folder_name).first
-        begin
-          new_folder = folder.create_subfolder(folder_name)
-        rescue RubyBox::ItemNameInUse => e
-          new_folder = folder.folders(folder_name).first
+        # folder = new_folder ? new_folder : folder.create_subfolder(folder_name)
+        
+        if !new_folder
+          begin
+            new_folder = folder.create_subfolder(folder_name)
+          rescue RubyBox::ItemNameInUse => e
+            new_folder = folder.folders(folder_name).first
+          end
         end
-        folder = new_folder ? new_folder : folder.folders(folder_name).first
+        folder = new_folder
       end
       folder
     end
