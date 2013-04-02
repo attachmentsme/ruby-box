@@ -55,9 +55,7 @@ module RubyBox
       folder = root_folder
       folder_names = split_path(path)
       folder_names.each do |folder_name|
-        new_folder = folder.folders(folder_name).first
-        # folder = new_folder ? new_folder : folder.create_subfolder(folder_name)
-        
+        new_folder = folder.folders(folder_name).first        
         if !new_folder
           begin
             new_folder = folder.create_subfolder(folder_name)
