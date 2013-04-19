@@ -1,8 +1,10 @@
 module RubyBox
   class Event < Item
 
-    def source?
-      !@raw_item['source'].nil?
+    private
+
+    def resource_name
+      'events'
     end
 
   end
