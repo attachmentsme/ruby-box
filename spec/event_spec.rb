@@ -53,5 +53,18 @@ describe RubyBox::EventResponse do
 
   end
 
+  describe RubyBox::Event do
+    before do
+      @eresp = @client.event_response
+      @rbevents = @eresp.events
+    end
+
+    it '#source?' do
+      @rbevents[0].source?.should be_true
+      @rbevents[2].source?.should be_false
+    end
+
+  end
+
 end
 
