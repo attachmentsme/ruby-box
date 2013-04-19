@@ -13,7 +13,7 @@ describe RubyBox::EventResponse do
   end
 
   it 'returns an EventResponse with a chunk_size and next_stream_position' do
-    eresp = @client.events
+    eresp = @client.event_response
     eresp.instance_of?(RubyBox::EventResponse).should be_true
     eresp.events.instance_of?(Array).should be_true
     eresp.chunk_size.should eq(@events['chunk_size'])
@@ -21,9 +21,9 @@ describe RubyBox::EventResponse do
     eresp.next_stream_position.should eq(@events['next_stream_position'])
   end
 
-  describe '#events' do
+  describe '#event_response' do
     before do
-      @response = @client.events
+      @response = @client.event_response
       @event = @response.events.first
     end
 

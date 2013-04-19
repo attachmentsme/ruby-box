@@ -89,7 +89,7 @@ module RubyBox
       path.split('/')
     end
 
-    def events(stream_position=0, stream_type=:all, limit=100)
+    def event_response(stream_position=0, stream_type=:all, limit=100)
       q = fmt_events_args stream_position, stream_type, limit
       url = "#{RubyBox::API_URL}/events?#{q}"
       resp = @session.get( url )
