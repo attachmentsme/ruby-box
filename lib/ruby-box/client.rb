@@ -89,6 +89,13 @@ module RubyBox
       path.split('/')
     end
 
+    def event_response(stream_position=0, stream_type=:all, limit=100)
+      q = fmt_events_args stream_position, stream_type, limit
+      url = "#{RubyBox::API_URL}/events?#{q}"
+      resp = @session.get( url )
+      EventResponse.new(@session, resp)
+    end
+
     private
 
     def folder_from_split_path(path)
@@ -98,6 +105,13 @@ module RubyBox
         return nil unless folder
       end
       folder
+    end
+
+    def fmt_events_args(stream_position, stream_type, limit)
+      stream_position = stream_position.kind_of?(Numeric) ? stream_position : 0
+      stream_type = [:all, :changes, :sync].include?(stream_type) ? stream_type : :all
+      limit = limit.kind_of?(Fixnum) ? limit : 100
+      "stream_position=#{stream_position}&stream_type=#{stream_type}&limit=#{limit}"
     end
     
   end

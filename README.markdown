@@ -138,6 +138,22 @@ items.each do |item|
 end
 ```
 
+Events
+======
+
+You can use RubyBox's event_response method to return an EventResponse that can be used to process any incoming events.
+
+```ruby
+eresp = client.event_response
+eresp.chunk_size
+eresp.next_stream_position
+eresp.events.each do |ev|
+  p "type=#{ev.event_id} type=#{ev.event_type} user=#{ev.created_by.name}"
+end
+```
+
+
+
 Contributors
 ------------
 

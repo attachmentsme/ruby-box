@@ -1,0 +1,161 @@
+{
+  "chunk_size": 3,
+  "next_stream_position": 1366038336000,
+  "entries": [
+    {
+      "type": "event",
+      "event_id": "dd4cba8afb2acb3cc0ecc43c81e565e78886494b",
+      "created_by": {
+        "type": "user",
+        "id": "000000000",
+        "name": "Example User",
+        "login": "test@example.com"
+      },
+      "created_at": "2013-04-12T13:53:52-07:00",
+      "recorded_at": "2013-04-12T13:53:52-07:00",
+      "event_type": "ITEM_CREATE",
+      "session_id": "d223c5ba4f4eb1d0b4fb55a",
+      "source": {
+        "type": "folder",
+        "id": "805142927",
+        "sequence_id": "0",
+        "etag": "0",
+        "name": "Test Folder",
+        "created_at": "2013-04-12T13:53:52-07:00",
+        "modified_at": "2013-04-12T13:53:52-07:00",
+        "description": "",
+        "size": 0,
+        "path_collection": {
+          "total_count": 1,
+          "entries": [
+            {
+              "type": "folder",
+              "id": "0",
+              "sequence_id": null,
+              "etag": null,
+              "name": "All Files"
+            }
+          ]
+        },
+        "created_by": {
+          "type": "user",
+          "id": "000000000",
+          "name": "Example User",
+          "login": "test@example.com"
+        },
+        "modified_by": {
+          "type": "user",
+          "id": "000000000",
+          "name": "Example User",
+          "login": "test@example.com"
+        },
+        "trashed_at": null,
+        "purged_at": null,
+        "content_created_at": "2013-04-12T13:53:52-07:00",
+        "content_modified_at": "2013-04-12T13:53:52-07:00",
+        "owned_by": {
+          "type": "user",
+          "id": "000000000",
+          "name": "Example User",
+          "login": "test@example.com"
+        },
+        "shared_link": null,
+        "folder_upload_email": null,
+        "parent": {
+          "type": "folder",
+          "id": "0",
+          "sequence_id": null,
+          "etag": null,
+          "name": "All Files"
+        },
+        "item_status": "active",
+        "synced": false
+      }
+    },
+    {
+      "type": "event",
+      "event_id": "dd4cba8afb2acb3cc0ecc43c81e565e78886494c",
+      "created_by": {
+        "type": "user",
+        "id": "000000000",
+        "name": "Example User",
+        "login": "test@example.com"
+      },
+      "created_at": "2013-04-12T13:54:25-07:00",
+      "recorded_at": "2013-04-12T13:54:26-07:00",
+      "event_type": "ITEM_RENAME",
+      "session_id": "d223c5ba4f4eb1d0b4fb55a",
+      "source": {
+        "type": "folder",
+        "id": "805142927",
+        "sequence_id": "1",
+        "etag": "1",
+        "name": "Test Folder",
+        "created_at": "2013-04-12T13:53:52-07:00",
+        "modified_at": "2013-04-12T13:54:25-07:00",
+        "description": "Project: Test",
+        "size": 0,
+        "path_collection": {
+          "total_count": 1,
+          "entries": [
+            {
+              "type": "folder",
+              "id": "0",
+              "sequence_id": null,
+              "etag": null,
+              "name": "All Files"
+            }
+          ]
+        },
+        "created_by": {
+          "type": "user",
+          "id": "000000000",
+          "name": "Example User",
+          "login": "test@example.com"
+        },
+        "modified_by": {
+          "type": "user",
+          "id": "000000000",
+          "name": "Example User",
+          "login": "test@example.com"
+        },
+        "trashed_at": null,
+        "purged_at": null,
+        "content_created_at": "2013-04-12T13:53:52-07:00",
+        "content_modified_at": "2013-04-12T13:54:25-07:00",
+        "owned_by": {
+          "type": "user",
+          "id": "000000000",
+          "name": "Example User",
+          "login": "test@example.com"
+        },
+        "shared_link": null,
+        "folder_upload_email": null,
+        "parent": {
+          "type": "folder",
+          "id": "0",
+          "sequence_id": null,
+          "etag": null,
+          "name": "All Files"
+        },
+        "item_status": "active",
+        "synced": false
+      }
+    },
+    {
+      "type": "event",
+      "event_id": "dd4cba8afb2acb3cc0ecc43c81e565e78886494d",
+      "created_by": {
+        "type": "user",
+        "id": "000000000",
+        "name": "Example User",
+        "login": "test@example.com"
+      },
+      "created_at": "2013-04-12T14:02:06-07:00",
+      "recorded_at": "2013-04-12T14:02:06-07:00",
+      "event_type": "TAG_ITEM_CREATE",
+      "session_id": "d223c5ba4f4eb1d0b4fb55a",
+      "source": null
+    }
+  ]
+}

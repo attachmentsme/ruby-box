@@ -8,6 +8,8 @@ require 'ruby-box/user'
 require 'ruby-box/comment'
 require 'ruby-box/discussion'
 require 'ruby-box/exceptions'
+require 'ruby-box/event_response'
+require 'ruby-box/event'
 
 module RubyBox
   API_URL = 'https://api.box.com/2.0'
