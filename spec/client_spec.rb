@@ -1,5 +1,6 @@
 #encoding: UTF-8
 
+require 'spec_helper'
 require 'helper/account'
 require 'ruby-box'
 require 'webmock/rspec'
