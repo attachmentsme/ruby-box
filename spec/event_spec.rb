@@ -21,6 +21,14 @@ describe RubyBox::EventResponse do
     eresp.next_stream_position.should eq(@events['next_stream_position'])
   end
 
+  it "should not try to reload_meta since has_mini_format? is false" do
+    # request is called once when reload_meta is automatically executed.
+    RubyBox::Session.any_instance.should_not_receive(:request)
+    response = @client.event_response
+    event = response.events.first
+    event.missing_key
+  end
+
   describe '#event_response' do
     before do
       @response = @client.event_response

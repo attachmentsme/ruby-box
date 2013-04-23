@@ -59,7 +59,7 @@ module RubyBox
       @raw_item[key] = args[0] if setter and update_fields.include?(key)
       
       # we may have a mini version of the object loaded, fix this.
-      reload_meta if @raw_item[key].nil?
+      reload_meta if @raw_item[key].nil? and has_mini_format?
 
       if @raw_item[key].kind_of?(Hash)
         return RubyBox::Item.factory(@session, @raw_item[key])
@@ -81,11 +81,15 @@ module RubyBox
       when 'comment'
         return RubyBox::Comment.new(session, entry)        
       when 'user'
-        return RubyBox::User.new(session, entry)        
+        return RubyBox::User.new(session, entry)
       when 'discussion'
         return RubyBox::Discussion.new(session, entry)
       end
       entry
+    end
+
+    def has_mini_format?
+      true
     end
 
     private
