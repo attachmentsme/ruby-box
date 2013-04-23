@@ -13,5 +13,9 @@ module RubyBox
       'events'
     end
 
+    def has_mini_format?
+      false
+    end
+
   end
 end

@@ -3,8 +3,8 @@ module RubyBox
 
     private
 
-    def resource_name
-      'events'
+    def has_mini_format?
+      false
     end
 
   end

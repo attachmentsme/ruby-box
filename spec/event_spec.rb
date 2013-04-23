@@ -21,6 +21,14 @@ describe RubyBox::EventResponse do
     eresp.next_stream_position.should eq(@events['next_stream_position'])
   end
 
+  it "should not try to reload_meta since has_mini_format? is false" do
+    # request is called once when reload_meta is automatically executed.
+    RubyBox::Session.any_instance.should_not_receive(:request)
+    response = @client.event_response
+    event = response.events.first
+    event.missing_key
+  end
+
   describe '#event_response' do
     before do
       @response = @client.event_response
@@ -49,19 +57,6 @@ describe RubyBox::EventResponse do
 
     it 'should return an instantiated #source' do
       @event.source.instance_of?(RubyBox::Folder).should be_true
-    end
-
-  end
-
-  describe RubyBox::Event do
-    before do
-      @eresp = @client.event_response
-      @rbevents = @eresp.events
-    end
-
-    it '#source?' do
-      @rbevents[0].source?.should be_true
-      @rbevents[2].source?.should be_false
     end
 
   end
