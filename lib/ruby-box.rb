@@ -10,6 +10,7 @@ require 'ruby-box/discussion'
 require 'ruby-box/exceptions'
 require 'ruby-box/event_response'
 require 'ruby-box/event'
+require 'ruby-box/web_link'
 
 module RubyBox
   API_URL = 'https://api.box.com/2.0'

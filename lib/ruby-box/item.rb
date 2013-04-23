@@ -84,6 +84,8 @@ module RubyBox
         return RubyBox::User.new(session, entry)
       when 'discussion'
         return RubyBox::Discussion.new(session, entry)
+      when 'web_link'
+        return RubyBox::WebLink.new(session, entry)
       end
       entry
     end
