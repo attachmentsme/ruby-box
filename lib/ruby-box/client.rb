@@ -96,6 +96,11 @@ module RubyBox
       EventResponse.new(@session, resp)
     end
 
+    def me
+      resp = @session.get( "#{RubyBox::API_URL}/users/me" )
+      User.new(@session, resp)
+    end
+
     private
 
     def folder_from_split_path(path)
