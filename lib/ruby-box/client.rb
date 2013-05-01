@@ -113,7 +113,7 @@ module RubyBox
     end
 
     def fmt_events_args(stream_position, stream_type, limit)
-      unless stream_position == 'now'
+      unless stream_position.to_s == 'now'
         stream_position = stream_position.kind_of?(Numeric) ? stream_position : 0
       end
       stream_type = [:all, :changes, :sync].include?(stream_type) ? stream_type : :all
