@@ -29,6 +29,11 @@ describe RubyBox::EventResponse do
     event.missing_key
   end
 
+  it '#fmt_events_args should return a properly formatted URL' do
+    @client.send(:fmt_events_args, 0, :all, 100).should eql("stream_position=0&stream_type=all&limit=100")
+    @client.send(:fmt_events_args, 'now', :changes, 55).should eql("stream_position=now&stream_type=changes&limit=55")
+  end
+
   describe '#event_response' do
     before do
       @response = @client.event_response
