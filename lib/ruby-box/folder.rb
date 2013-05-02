@@ -16,6 +16,12 @@ module RubyBox
       end
     end
 
+    def collaborations(item_limit=100, offset=0)
+      items(item_limit, offset).select do |item|
+        item.kind_of? RubyBox::Collaboration
+      end
+    end
+
     def upload_file(filename, data)
       file = RubyBox::File.new(@session, {
         'name' => filename,
