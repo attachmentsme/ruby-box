@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "1.1.2"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Attachments.me"]
-  s.date = "2013-05-01"
+  s.date = "2013-05-03"
   s.description = "ruby gem for box.com 2.0 api"
   s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
@@ -43,11 +43,13 @@ Gem::Specification.new do |s|
     "spec/event_spec.rb",
     "spec/file_spec.rb",
     "spec/fixtures/events.json",
+    "spec/fixtures/me.json",
     "spec/fixtures/遠志教授.jpg",
     "spec/folder_spec.rb",
     "spec/helper/account.example",
     "spec/helper/account.rb",
     "spec/integration_spec.rb",
+    "spec/me_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/attachmentsme/ruby-box"
@@ -62,6 +64,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<multipart-post>, [">= 0"])
       s.add_runtime_dependency(%q<oauth2>, [">= 0"])
+      s.add_runtime_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
@@ -69,6 +72,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<multipart-post>, [">= 0"])
       s.add_dependency(%q<oauth2>, [">= 0"])
+      s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
@@ -77,6 +81,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<multipart-post>, [">= 0"])
     s.add_dependency(%q<oauth2>, [">= 0"])
+    s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
