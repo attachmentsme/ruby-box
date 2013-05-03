@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/ruby-box.rb",
     "lib/ruby-box/client.rb",
+    "lib/ruby-box/collaboration.rb",
     "lib/ruby-box/comment.rb",
     "lib/ruby-box/discussion.rb",
     "lib/ruby-box/event.rb",

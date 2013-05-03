@@ -73,21 +73,12 @@ module RubyBox
     protected
 
     def self.factory(session, entry)
-      case entry['type']
-      when 'folder'
-        return RubyBox::Folder.new(session, entry)
-      when 'file'
-        return RubyBox::File.new(session, entry)
-      when 'comment'
-        return RubyBox::Comment.new(session, entry)        
-      when 'user'
-        return RubyBox::User.new(session, entry)
-      when 'discussion'
-        return RubyBox::Discussion.new(session, entry)
-      when 'web_link'
-        return RubyBox::WebLink.new(session, entry)
+      type = entry['type'].capitalize.to_sym
+      if RubyBox.constants.include? type
+        RubyBox.const_get(type).new(session, entry)
+      else
+        entry
       end
-      entry
     end
 
     def has_mini_format?
