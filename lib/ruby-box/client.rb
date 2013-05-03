@@ -17,7 +17,7 @@ module RubyBox
     end
 
     def folder(path='/')
-      path = path.sub(/(^\.\/?$)|(^\.\/)/, '') if path # handle folders with leading '.'
+      path = path.sub(/(^\.$)|(^\.\/)/, '') if path # handle folders with leading '.'
       return root_folder if ['', '/'].member?(path)
       folder_from_split_path( split_path(path) )
     end
