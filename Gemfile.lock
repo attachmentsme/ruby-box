@@ -12,6 +12,7 @@ GEM
       bundler (~> 1.0)
       git (>= 1.2.5)
       rake
+    json (1.7.7)
     jwt (0.1.5)
       multi_json (>= 1.0)
     multi_json (1.6.0)
@@ -42,6 +43,7 @@ PLATFORMS
 DEPENDENCIES
   bundler
   jeweler (~> 1.6.4)
+  json
   multipart-post
   oauth2
   rspec

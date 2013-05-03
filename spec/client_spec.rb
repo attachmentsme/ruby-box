@@ -10,6 +10,17 @@ describe RubyBox::Client do
     @session = RubyBox::Session.new
   end
 
+  describe '#folder' do
+    it "should return root folder as default behavior for paths such as ./" do
+      RubyBox::Client.any_instance.should_receive(:root_folder).exactly(4).times
+      client = RubyBox::Client.new(@session)
+      client.folder()
+      client.folder('.')
+      client.folder('./')
+      client.folder('/')
+    end
+  end
+
   describe '#split_path' do
     it "returns the appropriate path" do
       client = RubyBox::Client.new(@session)

@@ -16,12 +16,14 @@ module RubyBox
       folder.reload_meta
     end
 
-    def folder(path)
+    def folder(path='/')
+      path = path.sub(/(^\.\/?$)|(^\.\/)/, '') if path # handle folders with leading '.'
+      return root_folder if ['', '/'].member?(path)
       folder_from_split_path( split_path(path) )
     end
 
     def file(path)
-      path = split_path(path)
+      path = split_path( path.sub(/^\.\//, '') )
       file_name = path.pop
       folder = folder_from_split_path( path )
       folder.files(file_name).first if folder
