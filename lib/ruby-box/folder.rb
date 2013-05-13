@@ -3,6 +3,7 @@ module RubyBox
 
     has_many :discussions
     has_many_paginated :items
+    has_many :collaborations
 
     def files(name=nil, item_limit=100, offset=0)
       items(item_limit, offset).select do |item|
@@ -13,12 +14,6 @@ module RubyBox
     def folders(name=nil, item_limit=100, offset=0)
       items(item_limit, offset).select do |item|
         item.kind_of? RubyBox::Folder and (name.nil? or item.name == name)
-      end
-    end
-
-    def collaborations(item_limit=100, offset=0)
-      items(item_limit, offset).select do |item|
-        item.kind_of? RubyBox::Collaboration
       end
     end
 
