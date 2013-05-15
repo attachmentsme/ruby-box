@@ -15,6 +15,17 @@ describe RubyBox, :skip => true do
     })
 
     @client = RubyBox::Client.new(@session)
+
+    # Create a file with a UTF-8 name for testing.
+    # This is not checked in, as UTF-8 causes issues with
+    # Windows (lame).
+    f = File.new('./spec/fixtures/遠志教授.jpg', 'w')
+    f.puts('Hello World!')
+    f.close()
+  end
+
+  after do
+    File.delete('./spec/fixtures/遠志教授.jpg')
   end
     
   it "raises an AuthError if not client auth fails" do
