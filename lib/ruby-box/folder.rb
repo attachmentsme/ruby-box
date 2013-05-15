@@ -38,9 +38,22 @@ module RubyBox
       url = "#{RubyBox::API_URL}/#{resource_name}"
       uri = URI.parse(url)
       request = Net::HTTP::Post.new( uri.request_uri )
+      # '{"name":"New Folder", "parent": {"id": "0"}}'
       request.body = JSON.dump({ "name" => name, "parent" => {"id" => id} })
       resp = @session.request(uri, request)
       RubyBox::Folder.new(@session, resp)
+    end
+
+    def create_collaboration(email, role)
+      collaboration = RubyBox::Collaboration.new(@session, {
+          'item' => {'id' => id, 'type' => type},
+          'accessible_by' => {'login' => email},
+          'role' => role
+      })
+
+      collaboration.create
+
+      return collaboration
     end
 
     private

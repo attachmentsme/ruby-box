@@ -35,6 +35,15 @@ module RubyBox
       self
     end
 
+    def create
+      url = "#{RubyBox::API_URL}/#{resource_name}"
+      uri = URI.parse(url)
+      request = Net::HTTP::Post.new( uri.request_uri )
+      request.body = JSON.dump(@raw_item)
+      resp = @session.request(uri, request)
+      @raw_item = resp
+    end
+
     def delete
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
       resp = @session.delete( url )
