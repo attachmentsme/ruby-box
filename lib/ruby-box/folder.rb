@@ -56,6 +56,11 @@ module RubyBox
       return collaboration
     end
 
+    def delete_recursive
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}?recursive=true"
+      resp = @session.delete( url )
+    end
+
     private
 
     def resource_name
