@@ -4,22 +4,16 @@ module RubyBox
     has_many :discussions
     has_many_paginated :items
 
-    def files(name=nil, item_limit=100, offset=0)
-      items(item_limit, offset).select do |item|
-        item.kind_of? RubyBox::File and (name.nil? or item.name == name)
-      end
+    def files(name=nil, item_limit=100, offset=0, fields=nil)
+      items_by_type(RubyBox::File, name, item_limit, offset, fields)
     end
 
-    def folders(name=nil, item_limit=100, offset=0)
-      items(item_limit, offset).select do |item|
-        item.kind_of? RubyBox::Folder and (name.nil? or item.name == name)
-      end
+    def folders(name=nil, item_limit=100, offset=0, fields=nil)
+      items_by_type(RubyBox::Folder, name, item_limit, offset, fields)
     end
 
-    def collaborations(item_limit=100, offset=0)
-      items(item_limit, offset).select do |item|
-        item.kind_of? RubyBox::Collaboration
-      end
+    def collaborations(item_limit=100, offset=0, fields=nil)
+      items_by_type(RubyBox::Collaboration, nil, item_limit, offset, fields)
     end
 
     def upload_file(filename, data)
@@ -56,6 +50,20 @@ module RubyBox
 
     def update_fields
       ['name', 'description']
+    end
+
+    def items_by_type(type, name, item_limit, offset, fields)
+
+      # allow paramters to be set via
+      # a hash rather than a list of arguments.
+      if name.is_a?(Hash)
+        return items_by_type(type, name[:name], name[:item_limit], name[:offset], name[:fields])
+      end
+
+      items(item_limit, offset, fields).select do |item|
+        item.kind_of? type and (name.nil? or item.name == name)
+      end
+
     end
   end
 end

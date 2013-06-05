@@ -51,7 +51,7 @@ module RubyBox
 
       # Support has many and paginated has many relationships.
       return many(key) if @@has_many.include?(key)
-      return paginated(key, args[0] || 100, args[1] || 0) if @@has_many_paginated.include?(key)
+      return paginated(key, args[0] || 100, args[1] || 0, args[2]) if @@has_many_paginated.include?(key)
       
       # update @raw_item hash if this appears to be a setter.
       setter = method.to_s.end_with?('=')
@@ -93,10 +93,11 @@ module RubyBox
       resp['entries'].map {|i| RubyBox::Item.factory(@session, i)}
     end
 
-    def paginated(key, item_limit=100, offset=0)
+    def paginated(key, item_limit=100, offset=0, fields=nil)
       Enumerator.new do |yielder|
         while true
           url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/#{key}?limit=#{item_limit}&offset=#{offset}"
+          url = "#{url}&fields=#{fields.map(&:to_s).join(',')}" if fields
           resp = @session.get( url )
           resp['entries'].each do |entry|
             yielder.yield(RubyBox::Item.factory(@session, entry))
