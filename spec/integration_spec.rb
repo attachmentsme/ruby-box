@@ -85,7 +85,6 @@ describe RubyBox, :skip => true do
       it "allows additional fields to be requested in file listing" do
         folder = RubyBox::Folder.new(@session, {'id' => '318810303'})
         file = folder.files({fields: [:name, :size]}).first
-        p file
         file.id.should == "2550686921"
         file.name.should == "2513582219_03fb9b67db_b.jpg"
         file.size.should == 593978
