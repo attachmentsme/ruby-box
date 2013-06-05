@@ -1,12 +1,12 @@
 ruby-box
---------
+========
 
 Mainted by: [Attachments.me](https://attachments.me)
 
 RubyBox provides a simple, chainable, feature-rich client for [Box's 2.0 API](http://developers.box.com/docs/).
 
 Authorization
-=============
+-------------
 
 RubyBox uses Box's OAuth2 Implementaton, Here are the steps involved in authorizing a client:
 
@@ -49,12 +49,12 @@ client = RubyBox::Client.new(session)
 ```
 
 Usage
------
+=====
 
 Once you've created a client, you can start interacting with the Box API. What follows are some basic examples of RubyBox's usage:
 
 Folders
-=======
+-------
 
 * Listing items in a folder:
 
@@ -87,7 +87,7 @@ discussion.comments.each {|comment| p comment.message}
 ```
 
 Files
-=====
+-----
 
 * Fetching a file's meta information.
 
@@ -127,7 +127,7 @@ end
 ```
 
 Search
-======
+------
 
 You can use RubyBox's search method to return files and folders that match a given query.
 
@@ -139,7 +139,7 @@ end
 ```
 
 Events
-======
+------
 
 You can use RubyBox's event_response method to return an EventResponse that can be used to process any incoming events.
 
@@ -155,7 +155,7 @@ end
 
 
 Contributors
-------------
+============
 
 * Benjamin Coe
 * Larry Kang
@@ -163,7 +163,7 @@ Contributors
 * Jesse Miller
 
 Contributing to ruby-box
------------------------
+========================
 
 RubyBox does not yet support all of Box's API Version 2.0 functionality, be liberal with your contributions.
  
@@ -175,7 +175,7 @@ RubyBox does not yet support all of Box's API Version 2.0 functionality, be libe
 * Submit a pull request
 
 Copyright
----------
+=========
 
 Copyright (c) 2012 Attachments.me. See LICENSE.txt for
 further details.
