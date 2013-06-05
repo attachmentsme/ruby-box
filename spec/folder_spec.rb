@@ -54,6 +54,18 @@ describe RubyBox::Folder do
       items[0].kind_of?(RubyBox::Folder).should == true
       items[1].kind_of?(RubyBox::File).should == true
     end
+
+    it "should allow a fields parameter to be set" do
+      RubyBox::Session.any_instance.should_receive(:get).with('https://api.box.com/2.0/folders/1/items?limit=100&offset=0&fields=size').and_return({'entries' => []})
+      session = RubyBox::Session.new
+      RubyBox::Folder.new(session, {'id' => 1}).items(100, 0, [:size]).to_a
+    end
+
+    it "should not have the fields parameter set by default" do
+      RubyBox::Session.any_instance.should_receive(:get).with('https://api.box.com/2.0/folders/1/items?limit=100&offset=0').and_return({'entries' => []})
+      session = RubyBox::Session.new
+      RubyBox::Folder.new(session, {'id' => 1}).items.to_a
+    end
   end
 
   describe '#files' do

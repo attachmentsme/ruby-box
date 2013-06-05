@@ -80,6 +80,16 @@ describe RubyBox, :skip => true do
         file.id.should == "2550686921"
       end      
     end
+
+    describe '#files' do
+      it "allows additional fields to be requested in file listing" do
+        folder = RubyBox::Folder.new(@session, {'id' => '318810303'})
+        file = folder.files({fields: [:name, :size]}).first
+        file.id.should == "2550686921"
+        file.name.should == "2513582219_03fb9b67db_b.jpg"
+        file.size.should == 593978
+      end
+    end
     
     describe '#create' do
       it "creates a folder" do
