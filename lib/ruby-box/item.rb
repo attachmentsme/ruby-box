@@ -73,7 +73,7 @@ module RubyBox
     protected
 
     def self.factory(session, entry)
-      type = entry['type'].capitalize.to_sym
+      type = entry['type'] ? entry['type'].capitalize.to_sym : nil
       if RubyBox.constants.include? type
         RubyBox.const_get(type).new(session, entry)
       else
