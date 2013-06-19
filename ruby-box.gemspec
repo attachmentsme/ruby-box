@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "1.3.0"
+  s.version = "1.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Attachments.me"]
-  s.date = "2013-06-05"
+  s.date = "2013-06-19"
   s.description = "ruby gem for box.com 2.0 api"
   s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
