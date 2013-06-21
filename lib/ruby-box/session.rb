@@ -13,6 +13,7 @@ module RubyBox
       if opts[:client_id]
         @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS.dup)
         @access_token = OAuth2::AccessToken.new(@oauth2_client, opts[:access_token]) if opts[:access_token]
+        @refresh_token = opts[:refresh_token]
       else # Support legacy API for historical reasons.
         @api_key = opts[:api_key]
         @auth_token = opts[:auth_token]
@@ -49,7 +50,7 @@ module RubyBox
       resp = request( uri, request, raw )
     end
     
-    def request(uri, request, raw=false)      
+    def request(uri, request, raw=false, retries=0)
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
@@ -66,6 +67,13 @@ module RubyBox
       if response.is_a? Net::HTTPNotFound
         raise RubyBox::ObjectNotFound
       end
+
+      # Got unauthorized (401) status, try to refresh the token
+      if response.code.to_i == 401 and @refresh_token and retries == 0
+        refresh_token(@refresh_token)
+        request(uri, request, raw, retries + 1)
+      end
+
       handle_errors( response.code.to_i, response.body, raw )
     end
 
@@ -91,10 +99,15 @@ module RubyBox
         msg = body.nil? || body.empty? ? "no data returned" : body
         parsed_body = { "message" =>  msg }
       end
+
+      # status is used to determine whether
+      # we need to refresh the access token.
+      parsed_body["status"] = status
+
       case status / 100
       when 4
         raise(RubyBox::ItemNameInUse.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
-        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401        
+        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401
         raise(RubyBox::RequestError.new(parsed_body), parsed_body["message"])
       when 5
         raise RubyBox::ServerError, parsed_body["message"]

@@ -1,4 +1,5 @@
 require 'time'
+require 'addressable/uri'
 
 module RubyBox
   class Item
@@ -35,8 +36,19 @@ module RubyBox
       self
     end
 
-    def delete
+    def create
+      url = "#{RubyBox::API_URL}/#{resource_name}"
+      uri = URI.parse(url)
+      request = Net::HTTP::Post.new( uri.request_uri )
+      request.body = JSON.dump(@raw_item)
+      resp = @session.request(uri, request)
+      @raw_item = resp
+      self
+    end
+
+    def delete(opts={})
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
+      url = "#{url}#{Addressable::URI.new(:query_values => opts).to_s}" unless opts.keys.empty?
       resp = @session.delete( url )
     end
 

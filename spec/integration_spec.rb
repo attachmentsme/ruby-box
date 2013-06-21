@@ -27,7 +27,7 @@ describe RubyBox, :skip => true do
   after do
     File.delete('./spec/fixtures/遠志教授.jpg')
   end
-    
+
   it "raises an AuthError if not client auth fails" do
     session = RubyBox::Session.new({
       api_key: 'bad-key',
@@ -112,7 +112,6 @@ describe RubyBox, :skip => true do
   end
 
   describe RubyBox::Client do
-
     describe '#put_data' do
       it "should update an existing file" do
         utf8_file_name = '遠志教授.jpg'
@@ -138,6 +137,14 @@ describe RubyBox, :skip => true do
         folder = @client.create_folder('/ruby-box_gem_testing/cool stuff/екузц/path1/path2')
         folder.id.should_not == nil
         folder.delete if folder
+      end
+    end
+
+    describe '#delete folder' do
+      it "should be able to recursively delete the contents of a folder" do
+        folder = @client.create_folder('/ruby-box_gem_testing/delete_test')
+        @client.create_folder('/ruby-box_gem_testing/delete_test/subfolder')
+        folder.delete(recursive: 'true')
       end
     end
 
@@ -176,6 +183,20 @@ describe RubyBox, :skip => true do
         data.should eq nil
       end   
     end
+
+    describe '#collaborations' do
+      it 'should be able to create and list collaborations on a folder' do
+        folder = @client.create_folder('/ruby-box_gem_testing/collaboration_folder')
+        folder.create_collaboration('bencoe@gmail.com')
+        folder.create_collaboration('ben@attachments.me', 'editor')
+        collaborations = folder.collaborations.to_a
+
+        collaborations[0].role.should == 'viewer'
+        collaborations[1].role.should == 'editor'
+        collaborations.count.should == 2
+
+        folder.delete if folder
+      end
+    end
   end
 end
-
