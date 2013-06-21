@@ -122,13 +122,4 @@ describe RubyBox::Folder do
     end
   end
 
-  describe '#collaborations' do
-    it "should only return items of type Collaboration" do
-      RubyBox::Session.any_instance.stub(:request) { @items.pop }
-      session = RubyBox::Session.new
-      collaborations = RubyBox::Folder.new(session, {'id' => 1}).collaborations
-      collaborations.count.should == 1
-      collaborations.first.kind_of?(RubyBox::Collaboration).should == true
-    end
-  end
 end

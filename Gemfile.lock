@@ -41,6 +41,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   bundler
   jeweler (~> 1.6.4)
   json

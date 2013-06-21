@@ -2,6 +2,7 @@ module RubyBox
   class Folder < Item
 
     has_many :discussions
+    has_many :collaborations
     has_many_paginated :items
 
     def files(name=nil, item_limit=100, offset=0, fields=nil)
@@ -10,10 +11,6 @@ module RubyBox
 
     def folders(name=nil, item_limit=100, offset=0, fields=nil)
       items_by_type(RubyBox::Folder, name, item_limit, offset, fields)
-    end
-
-    def collaborations(item_limit=100, offset=0, fields=nil)
-      items_by_type(RubyBox::Collaboration, nil, item_limit, offset, fields)
     end
 
     def upload_file(filename, data)
@@ -40,6 +37,18 @@ module RubyBox
       request.body = JSON.dump({ "name" => name, "parent" => {"id" => id} })
       resp = @session.request(uri, request)
       RubyBox::Folder.new(@session, resp)
+    end
+
+    # see http://developers.box.com/docs/#collaborations-collaboration-object
+    # for a list of valid roles.
+    def create_collaboration(email, role=:viewer)
+      collaboration = RubyBox::Collaboration.new(@session, {
+          'item' => {'id' => id, 'type' => type},
+          'accessible_by' => {'login' => email},
+          'role' => role.to_s
+      })
+
+      collaboration.create
     end
 
     private
