@@ -31,7 +31,14 @@ p '@token.token' # the access token.
 p '@token.refresh_token' # token that can be exchanged for a new access_token once the access_token expires.
 
 # refreshing token.
-@token = session.refresh_token('refresh-token-string')
+
+session = RubyBox::Session.new({
+  client_id: 'your-client-id',
+  client_secret: 'your-client-secret',
+  access_token: 'original-access-token' 
+})
+
+@token = session.refresh_token('your-refresh-token')
 ```
 
 __3)__ Create a client using a session initialized with the _access\_token_.
