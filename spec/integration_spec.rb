@@ -198,5 +198,34 @@ describe RubyBox, :skip => true do
         folder.delete if folder
       end
     end
+
+    describe '#shared_link' do
+      it 'should allow a share link to be created for a folder' do
+        folder = @client.create_folder('/ruby-box_gem_testing/shared_folder').create_shared_link
+
+        # share link was successfully created.
+        folder.shared_link['url'].should match /https?:\/\/[\S]+/
+        
+        # share link can be disabled.
+        folder.disable_shared_link
+        folder.shared_link.should == nil
+
+        folder.delete if folder
+      end
+
+      it 'should allow a share link to be created for a file' do
+        utf8_file_name = '遠志教授.jpg'
+        file = @client.upload_file('spec/fixtures/' + utf8_file_name, '/ruby-box_gem_testing/cool stuff/').create_shared_link
+
+        # share link was successfully created.
+        file.shared_link['url'].should match /https?:\/\/[\S]+/
+        
+        # share link can be disabled.
+        file.disable_shared_link
+        file.shared_link.should == nil
+
+        file.delete        
+      end
+    end
   end
 end

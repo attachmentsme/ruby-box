@@ -93,6 +93,13 @@ discussion = folder.discussions.first
 discussion.comments.each {|comment| p comment.message}
 ```
 
+* Creating a shared link for a folder.
+
+```ruby
+folder = client.folder('image_folder').create_shared_link
+p folder.shared_link['url'] # https://www.box.com/s/d6de3224958c1755412
+```
+
 Files
 -----
 
@@ -133,6 +140,13 @@ comments.each do |comment|
 end
 ```
 
+* Creating a shared link for a file.
+
+```ruby
+file = client.file('/image_folder/an-image.jpg').create_shared_link
+p file.shared_link['url'] # https://www.box.com/s/d6de3224958c1755412
+```
+
 Search
 ------
 
@@ -158,8 +172,6 @@ eresp.events.each do |ev|
   p "type=#{ev.event_id} type=#{ev.event_type} user=#{ev.created_by.name}"
 end
 ```
-
-
 
 Contributors
 ============

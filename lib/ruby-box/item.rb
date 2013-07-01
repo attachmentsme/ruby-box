@@ -82,6 +82,34 @@ module RubyBox
       end
     end
 
+    # see http://developers.box.com/docs/#folders-create-a-shared-link-for-a-folder
+    # for a list of valid options.
+    def create_shared_link(opts={})
+      raise UnshareableResource unless ['folder', 'file'].include?(type)
+
+      opts = {
+        access: 'open'
+      }.merge(opts) if opts
+
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}"
+      uri = URI.parse(url)
+
+      request = Net::HTTP::Put.new(uri.path, {
+        "Content-Type" => 'application/json'
+      })
+
+      request.body = JSON.dump({
+        shared_link: opts
+      })
+
+      @raw_item = @session.request(uri, request)
+      self
+    end
+
+    def disable_shared_link(opts={})
+      create_shared_link(nil)
+    end
+
     protected
 
     def self.factory(session, entry)
