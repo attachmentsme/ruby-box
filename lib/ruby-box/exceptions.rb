@@ -14,4 +14,5 @@ module RubyBox
   class RequestError < RubyBoxError; end
   class ServerError < StandardError; end
   class ItemNameInUse < RubyBoxError; end
+  class UnshareableResource < StandardError; end
 end
