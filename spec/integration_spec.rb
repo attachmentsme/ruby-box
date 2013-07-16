@@ -204,7 +204,7 @@ describe RubyBox, :skip => true do
         folder = @client.create_folder('/ruby-box_gem_testing/shared_folder').create_shared_link
 
         # share link was successfully created.
-        folder.shared_link['url'].should match /https?:\/\/[\S]+/
+        folder.shared_link.url.should match /https?:\/\/[\S]+/
         
         # share link can be disabled.
         folder.disable_shared_link
@@ -218,7 +218,7 @@ describe RubyBox, :skip => true do
         file = @client.upload_file('spec/fixtures/' + utf8_file_name, '/ruby-box_gem_testing/cool stuff/').create_shared_link
 
         # share link was successfully created.
-        file.shared_link['url'].should match /https?:\/\/[\S]+/
+        file.shared_link.url.should match /https?:\/\/[\S]+/
         
         # share link can be disabled.
         file.disable_shared_link

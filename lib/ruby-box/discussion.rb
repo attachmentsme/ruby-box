@@ -7,5 +7,9 @@ module RubyBox
     def resource_name
       'discussions'
     end
+
+    def has_mini_format?
+      true
+    end
   end
 end

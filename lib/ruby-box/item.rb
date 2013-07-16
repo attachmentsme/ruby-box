@@ -113,16 +113,16 @@ module RubyBox
     protected
 
     def self.factory(session, entry)
-      type = entry['type'] ? entry['type'].capitalize.to_sym : nil
+      type = entry['type'] ? entry['type'].split('_').map(&:capitalize).join('').to_sym : nil
       if RubyBox.constants.include? type
         RubyBox.const_get(type).new(session, entry)
       else
-        entry
+        RubyBox::Item.new(session, entry)
       end
     end
 
     def has_mini_format?
-      true
+      false
     end
 
     private
