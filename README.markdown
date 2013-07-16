@@ -144,7 +144,7 @@ end
 
 ```ruby
 file = client.file('/image_folder/an-image.jpg').create_shared_link
-p file.shared_link['url'] # https://www.box.com/s/d6de3224958c1755412
+p file.shared_link.url # https://www.box.com/s/d6de3224958c1755412
 ```
 
 Search
