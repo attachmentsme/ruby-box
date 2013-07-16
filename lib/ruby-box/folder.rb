@@ -66,6 +66,10 @@ module RubyBox
       'folders'
     end
 
+    def has_mini_format?
+      true
+    end
+
     def update_fields
       ['name', 'description']
     end

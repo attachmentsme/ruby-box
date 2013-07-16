@@ -11,5 +11,9 @@ module RubyBox
       ['role', 'status']
     end
 
+    def has_mini_format?
+      true
+    end
+
   end
 end

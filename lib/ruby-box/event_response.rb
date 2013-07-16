@@ -12,10 +12,6 @@ module RubyBox
     def resource_name
       'events'
     end
-
-    def has_mini_format?
-      false
-    end
-
+    
   end
 end
