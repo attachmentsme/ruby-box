@@ -7,6 +7,15 @@ module RubyBox
       resp = stream.read
     end
 
+    def copy_to( folder_id, name=nil )
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/copy"
+      uri = URI.parse(url)
+      request = Net::HTTP::Post.new( uri.request_uri )
+      request.body = JSON.dump({ "parent" => {"id" => folder_id},
+        "name" => name})
+      resp = @session.request(uri, request)
+    end
+
     def stream( opts={} )
       url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/content"
       @session.do_stream( url, opts )
