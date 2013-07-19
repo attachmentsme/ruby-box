@@ -64,6 +64,15 @@ module RubyBox
       self
     end
 
+    def create_comment(message)
+      comment = RubyBox::Comment.new(@session, {
+          'item' => {'id' => id, 'type' => type},
+          'message' => message
+      })
+
+      comment.create
+    end
+
     private
 
     def resource_name

@@ -93,4 +93,18 @@ describe RubyBox::File do
     end
   end
 
+  describe '#create_comment' do
+    it 'calls the /comments resource with the appropriate post body' do
+      stub_request(:post, "https://api.box.com/2.0/comments")
+        .to_return(:body => File.read('./spec/fixtures/comment_create.json'), :status => 200)
+
+      session = RubyBox::Session.new
+      file = RubyBox::File.new(session, @mini_file)
+      comment = file.create_comment('Hello world!')
+
+      # note that this value comes from the fixture.
+      comment.message.should == 'These tigers are cool!'
+    end
+  end
+
 end
