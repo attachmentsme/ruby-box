@@ -147,6 +147,14 @@ file = client.file('/image_folder/an-image.jpg').create_shared_link
 p file.shared_link.url # https://www.box.com/s/d6de3224958c1755412
 ```
 
+* Copying a file to another folder.
+
+```ruby
+file = client.file('/image_folder/an-image.jpg')
+folder = client.folder('image_folder')
+file.copy_to(folder)
+```
+
 Search
 ------
 
