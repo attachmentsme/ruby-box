@@ -50,15 +50,6 @@ module RubyBox
 
       collaboration.create
     end
-
-    def create_subfolder(name)
-      url = "#{RubyBox::API_URL}/#{resource_name}"
-      uri = URI.parse(url)
-      request = Net::HTTP::Post.new( uri.request_uri )
-      request.body = JSON.dump({ "name" => name, "parent" => {"id" => id} })
-      resp = @session.request(uri, request)
-      RubyBox::Folder.new(@session, resp)
-    end
     
     private
 
