@@ -65,12 +65,10 @@ module RubyBox
     end
 
     def create_comment(message)
-      comment = RubyBox::Comment.new(@session, {
+      RubyBox::Comment.new(@session, {
           'item' => {'id' => id, 'type' => type},
           'message' => message
-      })
-
-      comment.create
+      }).create
     end
 
     private

@@ -42,13 +42,11 @@ module RubyBox
     # see http://developers.box.com/docs/#collaborations-collaboration-object
     # for a list of valid roles.
     def create_collaboration(email, role=:viewer)
-      collaboration = RubyBox::Collaboration.new(@session, {
+      RubyBox::Collaboration.new(@session, {
           'item' => {'id' => id, 'type' => type},
           'accessible_by' => {'login' => email},
           'role' => role.to_s
-      })
-
-      collaboration.create
+      }).create
     end
     
     private
