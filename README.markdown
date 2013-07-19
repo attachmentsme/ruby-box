@@ -155,6 +155,13 @@ folder = client.folder('image_folder')
 file.copy_to(folder)
 ```
 
+* Adding a comment to a file.
+
+```ruby
+file = client.file('/image_folder/an-image.jpg').comment
+comment = file.create_comment('Hello World!')
+```
+
 Search
 ------
 
