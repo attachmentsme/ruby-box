@@ -259,7 +259,7 @@ describe RubyBox, :skip => true do
           copied_file.delete
       end
 
-      it "alows file to be renamed when copied" do
+      it "allows file to be renamed when copied" do
           file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
           folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
           
