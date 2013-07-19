@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "1.7.0"
+  s.version = "1.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Attachments.me"]
@@ -42,6 +42,7 @@ Gem::Specification.new do |s|
     "spec/client_spec.rb",
     "spec/event_spec.rb",
     "spec/file_spec.rb",
+    "spec/fixtures/comment_create.json",
     "spec/fixtures/events.json",
     "spec/fixtures/me.json",
     "spec/folder_spec.rb",

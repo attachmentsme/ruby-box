@@ -42,22 +42,11 @@ module RubyBox
     # see http://developers.box.com/docs/#collaborations-collaboration-object
     # for a list of valid roles.
     def create_collaboration(email, role=:viewer)
-      collaboration = RubyBox::Collaboration.new(@session, {
+      RubyBox::Collaboration.new(@session, {
           'item' => {'id' => id, 'type' => type},
           'accessible_by' => {'login' => email},
           'role' => role.to_s
-      })
-
-      collaboration.create
-    end
-
-    def create_subfolder(name)
-      url = "#{RubyBox::API_URL}/#{resource_name}"
-      uri = URI.parse(url)
-      request = Net::HTTP::Post.new( uri.request_uri )
-      request.body = JSON.dump({ "name" => name, "parent" => {"id" => id} })
-      resp = @session.request(uri, request)
-      RubyBox::Folder.new(@session, resp)
+      }).create
     end
     
     private

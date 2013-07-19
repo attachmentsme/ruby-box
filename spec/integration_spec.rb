@@ -228,6 +228,15 @@ describe RubyBox, :skip => true do
       end
     end
 
+    describe "#create_comment" do
+      it "allows a comment to be created on a file" do
+        file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/cool stuff/')
+        file.create_comment('Hello world!')
+        file.comments.first.message.should == 'Hello world!'
+        file.delete
+      end
+    end
+
     describe "#copy_to" do
       it "it copies a file to a folder when a folder id is passed in" do
           file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
