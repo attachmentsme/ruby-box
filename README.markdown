@@ -152,7 +152,7 @@ p file.shared_link.url # https://www.box.com/s/d6de3224958c1755412
 ```ruby
 file = client.file('/image_folder/an-image.jpg')
 folder = client.folder('image_folder')
-file.cop_to(folder)
+file.copy_to(folder)
 ```
 
 Search
