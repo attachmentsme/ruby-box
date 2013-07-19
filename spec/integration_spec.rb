@@ -227,5 +227,53 @@ describe RubyBox, :skip => true do
         file.delete        
       end
     end
+
+    describe "#copy_to" do
+      it "it copies a file to a folder when a folder id is passed in" do
+          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
+          
+          file.copy_to(folder.id)
+
+          copied_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
+
+          copied_file.name.should == file.name
+          copied_file.size.should == file.size
+
+          file.delete
+          copied_file.delete
+      end
+
+      it "it copies a file to a folder when a folder is passed in" do
+          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
+          
+          file.copy_to(folder)
+
+          copied_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
+
+          copied_file.name.should == file.name
+          copied_file.size.should == file.size
+
+          file.delete
+          copied_file.delete
+      end
+
+      it "alows file to be renamed when copied" do
+          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
+          
+          file.copy_to(folder, 'banana.jpg')
+
+          copied_file = @client.file('/ruby-box_gem_testing/cool stuff/banana.jpg')
+
+          copied_file.name.should == 'banana.jpg'
+          copied_file.size.should == file.size
+
+          file.delete
+          copied_file.delete
+      end
+    end
   end
+
 end
