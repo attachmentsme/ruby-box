@@ -23,7 +23,21 @@ module RubyBox
         resp = file.upload_content(data) #write a new file. If there is a conflict, update the conflicted file.
       rescue RubyBox::ItemNameInUse => e
         data.rewind
-        file = files(filename).first
+
+        # The Box API occasionally does not return
+        # context info for an ItemNameInUse exception.
+        # This is a workaround around:
+        begin
+          # were were given context information about this conflict?
+          file = RubyBox::File.new(@session, {
+            'id' => e['context_info']['conflicts'][0]['id']
+          })
+        rescue
+          # we were not given context information about this conflict.
+          # attempt to lookup the file.
+          file = files(filename).pop
+        end
+
         resp = file.update_content( data )
       end
     end
