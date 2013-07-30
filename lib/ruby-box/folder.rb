@@ -22,10 +22,8 @@ module RubyBox
       begin
         resp = file.upload_content(data) #write a new file. If there is a conflict, update the conflicted file.
       rescue RubyBox::ItemNameInUse => e
-        file = RubyBox::File.new(@session, {
-          'id' => e['context_info']['conflicts'][0]['id']
-        })
         data.rewind
+        file = files(filename).first
         resp = file.update_content( data )
       end
     end
