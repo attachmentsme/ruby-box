@@ -9,7 +9,10 @@ module RubyBox
       :token_url => "/api/oauth2/token"
     }
     
-    def initialize(opts={})
+    def initialize(opts={}, backoff=0.1)
+
+      @backoff = backoff # try not to excessively hammer API.
+
       if opts[:client_id]
         @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS.dup)
         @access_token = OAuth2::AccessToken.new(@oauth2_client, opts[:access_token]) if opts[:access_token]
@@ -73,6 +76,8 @@ module RubyBox
         refresh_token(@refresh_token)
         request(uri, request, raw, retries + 1)
       end
+
+      sleep(@backoff) # try not to excessively hammer API.
 
       handle_errors( response.code.to_i, response.body, raw )
     end
