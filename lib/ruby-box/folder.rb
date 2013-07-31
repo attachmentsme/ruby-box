@@ -35,9 +35,10 @@ module RubyBox
         rescue
           # we were not given context information about this conflict.
           # attempt to lookup the file.
-          file = files(filename).pop
+          file = files(filename, 1000).pop
         end
 
+        raise e unless file # re-raise the ItemNameInUse exception.
         resp = file.update_content( data )
       end
     end
