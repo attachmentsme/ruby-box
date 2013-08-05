@@ -9,7 +9,7 @@ module RubyBox
       :token_url => "/api/oauth2/token"
     }
     
-    def initialize(opts={}, backoff=0.1)
+    def initialize(opts={}, backoff=0.0)
 
       @backoff = backoff # try not to excessively hammer API.
 

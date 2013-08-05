@@ -239,96 +239,82 @@ describe RubyBox, :skip => true do
 
     describe "#copy_to" do
       it "it copies a file to a folder when a folder id is passed in" do
-          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
-          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
-          
-          file.copy_to(folder.id)
+        file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+        folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
+        
+        file.copy_to(folder.id)
 
-          copied_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
+        copied_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
 
-          copied_file.name.should == file.name
-          copied_file.size.should == file.size
+        copied_file.name.should == file.name
+        copied_file.size.should == file.size
 
-          file.delete
-          copied_file.delete
+        file.delete
+        copied_file.delete
       end
 
       it "it copies a file to a folder when a folder is passed in" do
-          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
-          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
-          
-          file.copy_to(folder)
+        file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+        folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
+        
+        file.copy_to(folder)
 
-          copied_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
+        copied_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
 
-          copied_file.name.should == file.name
-          copied_file.size.should == file.size
+        copied_file.name.should == file.name
+        copied_file.size.should == file.size
 
-          file.delete
-          copied_file.delete
+        file.delete
+        copied_file.delete
       end
 
       it "allows file to be renamed when copied" do
-          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
-          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
-          
-          file.copy_to(folder, 'banana.jpg')
+        file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+        folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
+        
+        file.copy_to(folder, 'banana.jpg')
 
-          copied_file = @client.file('/ruby-box_gem_testing/cool stuff/banana.jpg')
+        copied_file = @client.file('/ruby-box_gem_testing/cool stuff/banana.jpg')
 
-          copied_file.name.should == 'banana.jpg'
-          copied_file.size.should == file.size
+        copied_file.name.should == 'banana.jpg'
+        copied_file.size.should == file.size
 
-          file.delete
-          copied_file.delete
+        file.delete
+        copied_file.delete
       end
     end
 
     describe "#move_to" do
-      it "it moves a file to a folder when a folder id is passed in" do
-          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
-          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
-          
-          file.move_to(folder.id)
+      it "it moves a file to a folder, the original no longer exists" do
+        file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+        folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
 
-          moved_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
+        file.move_to(folder.id)
+        original_file = @client.file('/ruby-box_gem_testing/遠志教授.jpg')
+        original_file.should == nil # the original should no longer exist.
 
-          moved_file.name.should == file.name
-          moved_file.size.should == file.size
+        moved_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
+        moved_file.name.should == file.name # the file should exist in the new location.
+        moved_file.size.should == file.size
 
-          file.delete
-          moved_file.delete
-      end
-
-      it "it moves a file to a folder when a folder is passed in" do
-          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
-          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
-          
-          file.move_to(folder)
-
-          moved_file = @client.file('/ruby-box_gem_testing/cool stuff/遠志教授.jpg')
-
-          moved_file.name.should == file.name
-          moved_file.size.should == file.size
-
-          file.delete
-          moved_file.delete
+        moved_file.delete
       end
 
       it "allows file to be renamed when moved" do
-          file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
-          folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
-          
-          file.move_to(folder, 'banana.jpg')
+        file = @client.upload_file('spec/fixtures/遠志教授.jpg', '/ruby-box_gem_testing/')
+        folder = @client.folder('/ruby-box_gem_testing/cool stuff/')
 
-          moved_file = @client.file('/ruby-box_gem_testing/cool stuff/banana.jpg')
+        file.move_to(folder, 'banana.jpg')
+        original_file = @client.file('/ruby-box_gem_testing/遠志教授.jpg')
+        original_file.should == nil # the original should no longer exist.
 
-          moved_file.name.should == 'banana.jpg'
-          moved_file.size.should == file.size
+        moved_file = @client.file('/ruby-box_gem_testing/cool stuff/banana.jpg')
+        moved_file.name.should == 'banana.jpg' # the file should exist in the new location.
+        moved_file.size.should == file.size
 
-          file.delete
-          moved_file.delete
+        moved_file.delete
       end
+
     end
 
   end
