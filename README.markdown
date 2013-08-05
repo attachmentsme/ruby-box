@@ -155,6 +155,14 @@ folder = client.folder('image_folder')
 file.copy_to(folder)
 ```
 
+* Moving a file to another folder.
+
+```ruby
+file = client.file('/image_folder/an-image.jpg')
+folder = client.folder('image_folder')
+file.move_to(folder)
+```
+
 * Adding a comment to a file.
 
 ```ruby

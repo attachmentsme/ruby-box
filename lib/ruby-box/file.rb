@@ -7,6 +7,22 @@ module RubyBox
       resp = stream.read
     end
 
+    def move_to ( folder_id, name=nil )
+
+      # Allow either a folder_id or a folder object
+      # to be passed in.
+      folder_id = folder_id.id if folder_id.instance_of?(RubyBox::Folder)
+
+      uri = URI.parse( "#{RubyBox::API_URL}/#{resource_name}/#{id}" )
+      request = Net::HTTP::Put.new( uri.request_uri )
+      request.body = JSON.dump({
+        "parent" => {"id" => folder_id},
+        "name" => name
+        })
+
+      resp = @session.request(uri, request)
+    end
+
     def copy_to( folder_id, name=nil )
 
       # Allow either a folder_id or a folder object
