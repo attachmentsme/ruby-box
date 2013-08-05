@@ -7,6 +7,17 @@ module RubyBox
       resp = stream.read
     end
 
+    def move_to( folder_id, name=nil )
+      # Allow either a folder_id or a folder object
+      # to be passed in.
+      folder_id = folder_id.id if folder_id.instance_of?(RubyBox::Folder)
+
+      self.name = name if name
+      self.parent = {"id" => folder_id}
+
+      update
+    end
+
     def copy_to( folder_id, name=nil )
 
       # Allow either a folder_id or a folder object
@@ -82,7 +93,7 @@ module RubyBox
     end
 
     def update_fields
-      ['name', 'description']
+      ['name', 'description', 'parent']
     end
 
     def prepare_upload(data, fname)
