@@ -70,19 +70,19 @@ module RubyBox
       folder
     end
 
-    def upload_data(path, data)
+    def upload_data(path, data, overwrite=true)
       path = split_path(path)
       file_name = path.pop
       folder = create_folder(path.join('/'))
-      folder.upload_file(file_name, data) if folder
+      folder.upload_file(file_name, data, overwrite) if folder
     end
 
-    def upload_file(local_path, remote_path)
+    def upload_file(local_path, remote_path, overwrite=true)
       file_name = local_path.split('/').pop
       folder = create_folder( remote_path )
       return unless folder
       ::File.open( local_path ) do |data|
-        folder.upload_file(file_name, data)
+        folder.upload_file(file_name, data, overwrite)
       end
     end
 
