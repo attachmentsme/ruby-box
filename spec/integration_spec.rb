@@ -214,7 +214,8 @@ describe RubyBox, :skip => true do
 
         # share link was successfully created.
         folder.shared_link.url.should match /https?:\/\/[\S]+/
-        
+        folder.shared_link.is_a?(RubyBox::SharedLink).should == true
+
         # share link can be disabled.
         folder.disable_shared_link
         folder.shared_link.should == nil
