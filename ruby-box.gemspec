@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "1.9.3"
+  s.version = "1.9.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Attachments.me"]
-  s.date = "2013-08-07"
+  s.date = "2013-08-08"
   s.description = "ruby gem for box.com 2.0 api"
   s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
     "lib/ruby-box/folder.rb",
     "lib/ruby-box/item.rb",
     "lib/ruby-box/session.rb",
+    "lib/ruby-box/shared_link.rb",
     "lib/ruby-box/user.rb",
     "lib/ruby-box/web_link.rb",
     "ruby-box.gemspec",

@@ -110,6 +110,11 @@ module RubyBox
       create_shared_link(nil)
     end
 
+    def shared_link
+      return nil unless @raw_item['shared_link']
+      RubyBox::Item.factory(@session, @raw_item['shared_link'].merge('type' => 'shared_link'))
+    end
+
     protected
 
     def self.factory(session, entry)
