@@ -123,6 +123,15 @@ describe RubyBox, :skip => true do
         file.name.should == '遠志教授.jpg'
         file.delete
       end
+
+      it 'should raise an exception if files collide and overwrite is false' do
+        fdata = File.open( 'spec/fixtures/遠志教授.jpg', 'rb' )
+        file = @client.upload_data('/ruby-box_gem_testing/cool stuff/遠志教授.jpg', fdata)
+        fdata = File.open( 'spec/fixtures/遠志教授.jpg', 'rb' )
+        
+        expect{ @client.upload_data('/ruby-box_gem_testing/cool stuff/遠志教授.jpg', fdata, false) }.to raise_error(RubyBox::ItemNameInUse)
+        file.delete
+      end
       
       it "should upload a new file" do
         utf8_file_name = '遠志教授.jpg'
