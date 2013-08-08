@@ -130,6 +130,10 @@ module RubyBox
       false
     end
 
+    def as_json(opts={})
+      @raw_item
+    end
+
     private
 
     def many(key)
