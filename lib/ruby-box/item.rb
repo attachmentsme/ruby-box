@@ -115,6 +115,10 @@ module RubyBox
       RubyBox::Item.factory(@session, @raw_item['shared_link'].merge('type' => 'shared_link'))
     end
 
+    def as_json(opts={})
+      @raw_item
+    end
+
     protected
 
     def self.factory(session, entry)
@@ -128,10 +132,6 @@ module RubyBox
 
     def has_mini_format?
       false
-    end
-
-    def as_json(opts={})
-      @raw_item
     end
 
     private
