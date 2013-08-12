@@ -1,8 +1,9 @@
 module RubyBox
   class User < Item
     
-    def company 
-      @raw_item["enterprise"]
+    def enterprise
+      resp = @session.get( "#{RubyBox::API_URL}/users/me?fields=enterprise" )
+      resp["enterprise"]
     end
     
     private

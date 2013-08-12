@@ -102,11 +102,6 @@ module RubyBox
       resp = @session.get( "#{RubyBox::API_URL}/users/me" )
       User.new(@session, resp)
     end
-    
-    def my_company
-      resp = @session.get( "#{RubyBox::API_URL}/users/me?fields=enterprise" )
-      User.new(@session, resp)
-    end
 
     private
 
