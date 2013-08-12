@@ -16,7 +16,7 @@ module RubyBox
     def upload_file(filename, data, overwrite=true)
       file = RubyBox::File.new(@session, {
         'name' => filename,
-        'parent' => RubyBox::User.new(@session, {'id' => id})
+        'parent' => RubyBox::Folder.new(@session, {'id' => id})
       })
 
       begin
