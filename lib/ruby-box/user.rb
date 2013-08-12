@@ -2,7 +2,7 @@ module RubyBox
   class User < Item
     
     def enterprise
-      resp = @session.get( "#{RubyBox::API_URL}/users/me?fields=enterprise" )
+      resp = @session.get( "#{RubyBox::API_URL}/users/#{id}?fields=enterprise" )
       resp["enterprise"]
     end
     
