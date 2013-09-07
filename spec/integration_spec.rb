@@ -7,6 +7,7 @@ require 'webmock/rspec'
 
 describe RubyBox, :skip => true do
   before do
+
     WebMock.allow_net_connect!
     
     @session = RubyBox::Session.new({
@@ -112,6 +113,20 @@ describe RubyBox, :skip => true do
   end
 
   describe RubyBox::Client do
+
+    describe RubyBox::Client do
+      describe '#item' do
+        it "item method can lookup generic items, e.g., files or folders" do
+          file = @client.item( '/ruby-box_gem_testing/cool stuff/кузнецкий_105_а_№2.test' )
+          file.size.should == 14
+          file.name.should == 'кузнецкий_105_а_№2.test'
+
+          folder = @client.item( 'ruby-box_gem_testing' )
+          folder.name.should == 'ruby-box_gem_testing'
+        end
+      end
+    end
+
     describe '#put_data' do
       it "should update an existing file" do
         utf8_file_name = '遠志教授.jpg'
@@ -328,5 +343,4 @@ describe RubyBox, :skip => true do
     end
 
   end
-
 end
