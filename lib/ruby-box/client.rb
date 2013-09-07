@@ -29,6 +29,16 @@ module RubyBox
       folder.files(file_name).first if folder
     end
 
+    def item(path)
+      path = split_path( path.sub(/^\.\//, '') )
+      item_name = path.pop
+      folder = folder_from_split_path( path )
+
+      folder.items.select do |item|
+        item.instance_variable_get(:@raw_item)['name'] and item.name == item_name
+      end.first
+    end
+
     def download(path)
       file = file(path)
       file.download if file
