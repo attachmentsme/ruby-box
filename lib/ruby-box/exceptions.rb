@@ -1,6 +1,10 @@
 module RubyBox 
   class RubyBoxError < StandardError
-    def initialize(error_json)
+    attr_accessor :body, :status
+
+    def initialize(error_json, status, body)
+      @status = status
+      @body = body
       @error_json = error_json
     end
 
@@ -12,7 +16,7 @@ module RubyBox
   class ObjectNotFound < StandardError; end
   class AuthError < RubyBoxError; end
   class RequestError < RubyBoxError; end
-  class ServerError < StandardError; end
+  class ServerError < RubyBoxError; end
   class ItemNameInUse < RubyBoxError; end
   class UnshareableResource < StandardError; end
 end

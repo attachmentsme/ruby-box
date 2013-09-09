@@ -42,12 +42,31 @@ describe RubyBox, :skip => true do
   
   it "raises a RequestError if a badly formed request detected by the server" do
     stub_request(:get, "https://api.box.com/2.0/folders/0").to_return(:status => 401, :body => '{"type": "error", "status": 401, "message": "baddd req"}', :headers => {})
-    lambda {@client.root_folder}.should raise_error( RubyBox::AuthError ) 
+    lambda {@client.root_folder}.should raise_error( RubyBox::AuthError )
+
+    # make sure status and body is
+    # set on error object.
+    begin
+      @client.root_folder
+    rescue Exception => e
+      e.body.should == '{"type": "error", "status": 401, "message": "baddd req"}'
+      e.status.should == 401
+    end
   end
 
   it "raises a ServerError if the server raises a 500 error" do
     stub_request(:get, "https://api.box.com/2.0/folders/0").to_return(:status => 503, :body => '{"type": "error", "status": 503, "message": "We messed up! - Box.com"}', :headers => {})
     lambda {@client.root_folder}.should raise_error( RubyBox::ServerError )
+    
+    # make sure status and body is
+    # set on error object.
+    begin
+      @client.root_folder
+    rescue Exception => e
+      e.body.should == '{"type": "error", "status": 503, "message": "We messed up! - Box.com"}'
+      e.status.should == 503
+    end
+
   end
 
   describe RubyBox::Folder do
