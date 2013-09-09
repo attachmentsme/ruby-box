@@ -112,11 +112,11 @@ module RubyBox
 
       case status / 100
       when 4
-        raise(RubyBox::ItemNameInUse.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
-        raise(RubyBox::AuthError.new(parsed_body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401
-        raise(RubyBox::RequestError.new(parsed_body), parsed_body["message"])
+        raise(RubyBox::ItemNameInUse.new(parsed_body, status, body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
+        raise(RubyBox::AuthError.new(parsed_body, status, body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401
+        raise(RubyBox::RequestError.new(parsed_body, status, body), parsed_body["message"])
       when 5
-        raise RubyBox::ServerError, parsed_body["message"]
+        raise(RubyBox::ServerError.new(parsed_body, status, body), parsed_body["message"])
       end
       raw ? body : parsed_body
     end
