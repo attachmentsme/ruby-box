@@ -97,7 +97,7 @@ discussion.comments.each {|comment| p comment.message}
 
 ```ruby
 folder = client.folder('image_folder').create_shared_link
-p folder.shared_link['url'] # https://www.box.com/s/d6de3224958c1755412
+p folder.shared_link.url # https://www.box.com/s/d6de3224958c1755412
 ```
 
 Files
