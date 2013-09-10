@@ -199,10 +199,7 @@ end
 Contributors
 ============
 
-* Benjamin Coe
-* Larry Kang
-* Dan Reed
-* Jesse Miller
+* [full list of contributors](https://github.com/attachmentsme/ruby-box/graphs/contributors)
 
 Contributing to ruby-box
 ========================
