@@ -38,7 +38,9 @@ session = RubyBox::Session.new({
   access_token: 'original-access-token' 
 })
 
+# you need to persist this somehow. the refresh token will change every time you use it
 @token = session.refresh_token('your-refresh-token')
+save_me_somehow(@token.refresh_token)
 ```
 
 __3)__ Create a client using a session initialized with the _access\_token_.
@@ -58,7 +60,57 @@ client = RubyBox::Client.new(session)
 Usage
 =====
 
-Once you've created a client, you can start interacting with the Box API. What follows are some basic examples of RubyBox's usage:
+Once you've created a client, you can start interacting with the Box API. What follows are some basic examples of RubyBox's usage.
+
+Warning
+=======
+
+Please note that using a file/folder path is extremely inefficient, as it causes the gem to traverse the directory structure recursively querying each folder in turn. Prefer the `_by_id` methods where possible for single-request access.
+
+Items
+-----
+
+`File`s and `Folder`s are subclasses of `Item`. `Folder` contents (i.e. files and folders inside that folder) are retrieved in a `mini-format` when the `Folder` instance is loaded.
+
+There are two caveats to this:
+
+### Only some fields are available
+
+a `File` mini looks like this:
+
+```
+{
+    "type": "file",
+    "id": "5000948880",
+    "sequence_id": "3",
+    "etag": "3",
+    "sha1": "134b65991ed521fcfe4724b7d814ab8ded5185dc",
+    "name": "tigers.jpeg"
+}
+```
+a `Folder` mini looks like this:
+
+```
+{
+    "type":"folder",
+    "id":"301415432",
+    "sequence_id":"0",
+    "name":"my first sub-folder"
+}
+```
+
+Requests to fields other than the above (e.g. `file.size`) will cause a one-off hit to the api, so take care when iterating over folder contents lest a single application method result in hundreds of api hits and take forever to complete.
+
+This can be mitigated by passing a list of extra fields you want to fetch into the `.items` method:
+
+```ruby
+folder = client.folder_by_id(@folder_id)
+# retrieve size, created_at, and description for all items in this directory
+detailed_items = folder.items(@item_limit, @offset, ['size', 'created_at', 'description'])
+```
+
+Note: only the `type` and `id` fields are included in addition to whatever you specify using the above method, so you must be explicit.
+
 
 Folders
 -------
@@ -66,7 +118,8 @@ Folders
 * Listing items in a folder:
 
 ```ruby
-files = client.folder('/image_folder').files # all files in a folder.
+files = client.folder('/image_folder').files # all files in a folder using a path (bad).
+files = client.folder(@folder_id).files # all files in a folder using an id (good).
 folders = client.root_folder.folders # all folders in the root directory.
 files_and_folders = client.folder('files').items # all files and folders in /files
 ```
@@ -74,13 +127,14 @@ files_and_folders = client.folder('files').items # all files and folders in /fil
 * Creating a folder:
 
 ```ruby
-client.folder('image_folder').create_subfolder('subfolder')
+client.folder_by_id(@folder_id).create_subfolder('subfolder') # using an id (good)
+client.folder('image_folder').create_subfolder('subfolder') # using a path (bad)
 ```
 
 * Setting the description on a folder:
 
 ```ruby
-folder = client.folder('image_folder')
+folder = client.folder('image_folder') # using a path (bad)
 folder.description = 'Description on Folder'
 folder.update
 ```
@@ -88,7 +142,7 @@ folder.update
 * Listing the comments in a discussion surrounding a folder.
 
 ```ruby
-folder = client.folder('image_folder')
+folder = client.folder('image_folder') # lookups by id are more efficient
 discussion = folder.discussions.first
 discussion.comments.each {|comment| p comment.message}
 ```
@@ -96,8 +150,8 @@ discussion.comments.each {|comment| p comment.message}
 * Creating a shared link for a folder.
 
 ```ruby
-folder = client.folder('image_folder').create_shared_link
-p folder.shared_link.url # https://www.box.com/s/d6de3224958c1755412
+folder = client.folder('image_folder').create_shared_link # lookups by id are more efficient
+p folder.shared_link['url'] # https://www.box.com/s/d6de3224958c1755412
 ```
 
 Files
@@ -106,7 +160,8 @@ Files
 * Fetching a file's meta information.
 
 ```ruby
-file = client.file('/image_folder/an-image.jpg')
+file = client.file('/image_folder/an-image.jpg')# lookups by id are more efficient
+file = client.file(@file_id)
 p file.name
 p file.created_at
 ```
@@ -114,27 +169,37 @@ p file.created_at
 * Uploading a file to a folder.
 
 ```ruby
-file = client.upload_file('./LICENSE.txt', '/license_folder')
+file = client.upload_file('./LICENSE.txt', '/license_folder') # lookups by id are more efficient
+file = client.upload_file_by_folder_id('./LICENSE.txt', @folder_id) 
 ```
 
 * Downloading a file.
 
 ```ruby
+# again, paths bad!
 f = open('./LOCAL.txt', 'w+')
 f.write( client.file('/license_folder/LICENSE.txt').download )
+f.close()
+
+# do this if you can
+f = open('./LOCAL.txt', 'w+')
+f.write( client.file_by_id(@file_id).download ) # lookups by id are more efficient
 f.close()
 ```
 
 * Deleting a file.
 
 ```ruby
+client.file_by_id(@file_id).delete # this
 client.file('/license_folder/LICENSE.txt').delete
 ```
 
 * Displaying comments on a file.
 
 ```ruby
-comments = client.file('/image_folder/an-image.jpg').comments
+comments = client.file('/image_folder/an-image.jpg').comments # lookups by id are more efficient
+comments = client.file_by_id(@file_id).comments
+
 comments.each do |comment|
     p comment.message
 end
@@ -144,29 +209,46 @@ end
 
 ```ruby
 file = client.file('/image_folder/an-image.jpg').create_shared_link
+file = client.file_by_id(@file_id).create_shared_link # using an id
 p file.shared_link.url # https://www.box.com/s/d6de3224958c1755412
 ```
 
 * Copying a file to another folder.
 
 ```ruby
-file = client.file('/image_folder/an-image.jpg')
+
+file = client.file('/one_folder/cow_folder/an-image.jpg')
 folder = client.folder('image_folder')
+
+# lookups by id are more efficient
+
+file = client.file_by_id(@file_id)
+folder = client.folder_by_id(@folder_id)
+
 file.copy_to(folder)
 ```
 
 * Moving a file to another folder.
 
 ```ruby
-file = client.file('/image_folder/an-image.jpg')
+
+file = client.file('/one_folder/cow_folder/an-image.jpg')
 folder = client.folder('image_folder')
+
+# lookups by id are more efficient
+
+file = client.file_by_id(@file_id)
+folder = client.folder_by_id(@folder_id)
+
+
 file.move_to(folder)
 ```
 
 * Adding a comment to a file.
 
 ```ruby
-file = client.file('/image_folder/an-image.jpg')
+file = client.file('/image_folder/an-image.jpg') # path
+file = client.file_by_id(@file_id) # id
 comment = file.create_comment('Hello World!')
 ```
 
