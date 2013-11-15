@@ -113,6 +113,14 @@ module RubyBox
       User.new(@session, resp)
     end
 
+    def users(filter_term = "", limit = 100, offset = 0)
+      url = "#{RubyBox::API_URL}/users?filter_term=#{URI::encode(filter_term)}&limit=#{limit}&offset=#{offset}"
+      resp = @session.get( url )
+      resp['entries'].map do |entry|
+        RubyBox::Item.factory(@session, entry)
+      end
+    end
+
     private
 
     def folder_from_split_path(path)

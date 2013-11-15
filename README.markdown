@@ -196,6 +196,33 @@ eresp.events.each do |ev|
 end
 ```
 
+Users
+------
+
+Current User Info
+
+```ruby
+me = client.me
+```
+
+Current User's enterprise
+
+```ruby
+me = client.me.enterprise
+```
+
+An array of Ruby:Box users in an enterprise (Supports Filtering, Limit and Offset)
+
+```ruby
+users = client.users
+```
+
+* Remeber the API filters "name" and "login" by the start of the string.  ie: to get "sean+awesome@gmail.com" an approriate filter term would be "sean"
+
+```ruby
+users = client.users("sean" , 10 , 1)
+```
+
 Contributors
 ============
 
