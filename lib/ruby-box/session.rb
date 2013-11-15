@@ -100,6 +100,10 @@ module RubyBox
         params['Authorization'] = build_auth_header
       end
 
+      if @as_user
+        params['As-User'] = @as_user
+      end
+
       open(url, params)
     end
     
