@@ -1,7 +1,9 @@
 ruby-box
 ========
 
-Mainted by: [Attachments.me](https://attachments.me)
+Build Status: [![Build Status](https://travis-ci.org/attachmentsme/ruby-box.png)](https://travis-ci.org/attachmentsme/ruby-box)
+
+Mainted by: [Attachments.me](http://attachments.me)
 
 RubyBox provides a simple, chainable, feature-rich client for [Box's 2.0 API](http://developers.box.com/docs/).
 
