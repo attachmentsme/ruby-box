@@ -128,7 +128,7 @@ module RubyBox
       unless stream_position.to_s == 'now'
         stream_position = stream_position.kind_of?(Numeric) ? stream_position : 0
       end
-      stream_type = [:all, :changes, :sync].include?(stream_type) ? stream_type : :all
+      stream_type = [:all, :changes, :sync, :admin_logs].include?(stream_type) ? stream_type : :all
       limit = limit.kind_of?(Fixnum) ? limit : 100
       "stream_position=#{stream_position}&stream_type=#{stream_type}&limit=#{limit}"
     end
