@@ -77,10 +77,6 @@ module RubyBox
       true
     end
 
-    def update_fields
-      ['name', 'description']
-    end
-
     def items_by_type(type, name, item_limit, offset, fields)
 
       # allow paramters to be set via
