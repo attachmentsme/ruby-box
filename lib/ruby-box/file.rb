@@ -19,7 +19,7 @@ module RubyBox
     end
 
     def download_url
-      get(file_content_url)["message"]
+      @session.get(file_content_url)["message"]
     end
 
     def copy_to( folder_id, name=nil )
