@@ -80,7 +80,7 @@ module RubyBox
 
       sleep(@backoff) # try not to excessively hammer API.
 
-      handle_errors( response.code.to_i, response.body, raw )
+      handle_errors( response, raw )
     end
 
     def do_stream(url, opts)
@@ -98,7 +98,9 @@ module RubyBox
       open(url, params)
     end
     
-    def handle_errors( status, body, raw )
+    def handle_errors( response, raw )
+      status = response.code.to_i
+      body = response.body
       begin
         parsed_body = JSON.parse(body)
       rescue
@@ -111,6 +113,9 @@ module RubyBox
       parsed_body["status"] = status
 
       case status / 100
+      when 3
+        # 302 Found. We should return the url
+        parsed_body["message"] = response["Location"] if status == 302                  
       when 4
         raise(RubyBox::ItemNameInUse.new(parsed_body, status, body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
         raise(RubyBox::AuthError.new(parsed_body, status, body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401
