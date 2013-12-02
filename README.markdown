@@ -285,6 +285,19 @@ eresp.events.each do |ev|
 end
 ```
 
+As-User
+-------
+
+* This must be manually enabled for your account by Box Staff.   Contact api@box.com for access.  [ More Info ] (http://developers.box.com/docs/#users-as-user)
+
+```ruby
+session = RubyBox::Session.new({
+  client_id: 'your-client-id',
+  client_secret: 'your-client-secret',
+  access_token: 'original-access-token' ,
+  as_user: 'your-users-box-id'
+})
+```
 Contributors
 ============
 
