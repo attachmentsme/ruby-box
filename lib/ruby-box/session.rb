@@ -17,7 +17,7 @@ module RubyBox
         @oauth2_client = OAuth2::Client.new(opts[:client_id], opts[:client_secret], OAUTH2_URLS.dup)
         @access_token = OAuth2::AccessToken.new(@oauth2_client, opts[:access_token]) if opts[:access_token]
         @refresh_token = opts[:refresh_token]
-        @as_user = opts[:as_user] if opts[:as_user]
+        @as_user = opts[:as_user]
       else # Support legacy API for historical reasons.
         @api_key = opts[:api_key]
         @auth_token = opts[:auth_token]
@@ -67,9 +67,8 @@ module RubyBox
         request.add_field('Authorization', build_auth_header)
       end
 
-      if @as_user
-        request.add_field('As-User', "#{@as_user}")
-      end
+      
+      request.add_field('As-User', "#{@as_user}") if @as_user
 
       response = http.request(request)
 
