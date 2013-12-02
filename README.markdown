@@ -125,6 +125,11 @@ file = client.upload_file('./LICENSE.txt', '/license_folder')
 f = open('./LOCAL.txt', 'w+')
 f.write( client.file('/license_folder/LICENSE.txt').download )
 f.close()
+
+# You can also grab the raw url with
+client.file_by_id(@file_id).download_url
+# Note that this URL is not persistent. Clients will need to follow the url immediately in order to
+# actually download the file
 ```
 
 * Deleting a file.
