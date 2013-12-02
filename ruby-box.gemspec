@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ruby-box"
-  s.version = "1.11.1"
+  s.version = "1.12.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Attachments.me"]
-  s.date = "2013-09-09"
+  s.date = "2013-12-02"
   s.description = "ruby gem for box.com 2.0 api"
   s.email = "ben@attachments.me"
   s.extra_rdoc_files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".document",
+    ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
@@ -46,22 +47,24 @@ Gem::Specification.new do |s|
     "spec/fixtures/comment_create.json",
     "spec/fixtures/events.json",
     "spec/fixtures/me.json",
+    "spec/fixtures/users.json",
     "spec/folder_spec.rb",
     "spec/helper/account.example",
     "spec/helper/account.rb",
     "spec/integration_spec.rb",
     "spec/item_spec.rb",
     "spec/me_spec.rb",
-    "spec/spec_helper.rb"
+    "spec/spec_helper.rb",
+    "spec/users_spec.rb"
   ]
   s.homepage = "http://github.com/attachmentsme/ruby-box"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "2.0.3"
+  s.rubygems_version = "1.8.24"
   s.summary = "ruby gem for box.com 2.0 api"
 
   if s.respond_to? :specification_version then
-    s.specification_version = 4
+    s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<multipart-post>, [">= 0"])
