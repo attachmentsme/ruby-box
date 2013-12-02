@@ -12,7 +12,11 @@ module RubyBox
     end
 
     def root_folder
-      folder = Folder.new(@session, {'id' => '0'})
+      folder_by_id('0')
+    end
+
+    def folder_by_id(id)
+      folder = Folder.new(@session, {'id' => id})
       folder.reload_meta
     end
 
@@ -20,6 +24,11 @@ module RubyBox
       path = path.sub(/(^\.$)|(^\.\/)/, '') if path # handle folders with leading '.'
       return root_folder if ['', '/'].member?(path)
       folder_from_split_path( split_path(path) )
+    end
+
+    def file_by_id(id)
+      file = File.new(@session, {'id' => id})
+      file.reload_meta
     end
 
     def file(path)
@@ -88,12 +97,13 @@ module RubyBox
     end
 
     def upload_file(local_path, remote_path, overwrite=true)
-      file_name = local_path.split('/').pop
       folder = create_folder( remote_path )
-      return unless folder
-      ::File.open( local_path ) do |data|
-        folder.upload_file(file_name, data, overwrite)
-      end
+      upload_file_to_folder(local_path, folder, overwrite)
+    end
+
+    def upload_file_by_folder_id(local_path, folder_id, overwrite=true)
+      folder = folder_by_id(folder_id)
+      upload_file_to_folder(local_path, folder, overwrite)
     end
 
     def split_path(path)
@@ -114,6 +124,14 @@ module RubyBox
     end
 
     private
+
+    def upload_file_to_folder(local_path, folder, overwrite)
+      file_name = local_path.split('/').pop
+      return unless folder
+      ::File.open(local_path, 'rb') do |data|
+        folder.upload_file(file_name, data, overwrite)
+      end
+    end
 
     def folder_from_split_path(path)
       folder = root_folder
