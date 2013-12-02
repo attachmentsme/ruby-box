@@ -120,8 +120,8 @@ Folders
 * Listing items in a folder:
 
 ```ruby
-files = client.folder('/image_folder').files # all files in a folder using a path (bad).
-files = client.folder(@folder_id).files # all files in a folder using an id (good).
+files = client.folder('/image_folder').files # all files in a folder using a path.
+files = client.folder(@folder_id).files # all files in a folder using an id.
 folders = client.root_folder.folders # all folders in the root directory.
 files_and_folders = client.folder('files').items # all files and folders in /files
 ```
@@ -129,14 +129,14 @@ files_and_folders = client.folder('files').items # all files and folders in /fil
 * Creating a folder:
 
 ```ruby
-client.folder_by_id(@folder_id).create_subfolder('subfolder') # using an id (good)
-client.folder('image_folder').create_subfolder('subfolder') # using a path (bad)
+client.folder_by_id(@folder_id).create_subfolder('subfolder') # using an id.
+client.folder('image_folder').create_subfolder('subfolder') # using a path.
 ```
 
 * Setting the description on a folder:
 
 ```ruby
-folder = client.folder('image_folder') # using a path (bad)
+folder = client.folder('image_folder') # using a path.
 folder.description = 'Description on Folder'
 folder.update
 ```
