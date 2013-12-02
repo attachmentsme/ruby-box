@@ -20,6 +20,17 @@ module RubyBox
       keys.each {|key| @@has_many_paginated << key.to_s}
     end
 
+    def move_to( folder_id, name=nil )
+      # Allow either a folder_id or a folder object
+      # to be passed in.
+      folder_id = folder_id.id if folder_id.instance_of?(RubyBox::Folder)
+
+      self.name = name if name
+      self.parent = {"id" => folder_id}
+
+      update
+    end
+
     def update
       reload_meta unless etag
 
@@ -160,6 +171,11 @@ module RubyBox
     def serialize
       update_fields.inject({}) {|hash, field| hash[field] = @raw_item[field]; hash}
     end
+
+    def update_fields
+      ['name', 'description', 'parent']
+    end
+
 
   end
 end
