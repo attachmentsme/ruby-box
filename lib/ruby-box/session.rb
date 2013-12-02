@@ -98,10 +98,8 @@ module RubyBox
       else
         params['Authorization'] = build_auth_header
       end
-
-      if @as_user
-        params['As-User'] = @as_user
-      end
+      
+      params['As-User'] = @as_user if @as_user
 
       open(url, params)
     end
