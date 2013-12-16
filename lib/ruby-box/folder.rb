@@ -86,7 +86,7 @@ module RubyBox
       end
 
       items(item_limit, offset, fields).select do |item|
-        item.kind_of? type and (name.nil? or item.name == name)
+        item.kind_of? type and (name.nil? or item.name.casecmp(name) == 0)
       end
 
     end
