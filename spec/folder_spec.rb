@@ -30,6 +30,22 @@ describe RubyBox::Folder do
     root.created_at.year.should == 2012
   end
 
+  describe "#find_by_type" do
+    it "compares name in a case insensitive manner" do
+      items = [
+        JSON.parse('{    "total_count": 4,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        },        {            "type": "file",            "id": "409042867",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }    ],    "offset": "0",    "limit": "2"}'),
+        JSON.parse('{    "total_count": 4,    "entries": [        {            "type": "folder",            "id": "409047868",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s another folder"        },        {            "type": "file",            "id": "409042810",            "sequence_id": "1",            "etag": "1",            "name": "A choice file"        }    ],    "offset": "2",    "limit": "2"}')  
+      ]
+
+      RubyBox::Session.any_instance.stub(:request) { items.pop }
+      session = RubyBox::Session.new
+
+      # should return one file.
+      files = RubyBox::Folder.new(session, {'id' => 1}).files('A CHOICE file')
+      files.count.should == 1
+    end
+  end
+
   describe '#items' do
     it "should return a folder object for folder items" do
       item = JSON.parse('{    "id": "0000001", "total_count": 1,    "entries": [        {            "type": "folder",            "id": "409047867",            "sequence_id": "1",            "etag": "1",            "name": "Here\'s your folder"        }   ],    "offset": "0",    "limit": "1"}')
@@ -99,7 +115,6 @@ describe RubyBox::Folder do
       files = RubyBox::Folder.new(session, {'id' => 1}).files('foobar')
       files.count.should == 0
     end
-
   end
 
   describe '#discussions' do
