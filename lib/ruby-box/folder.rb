@@ -66,7 +66,20 @@ module RubyBox
           'role' => role.to_s
       }).create
     end
-    
+
+    def copy_to(destination, name=nil)
+      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/copy"
+      uri = URI.parse(url)
+      request = Net::HTTP::Post.new( uri.request_uri )
+
+      parent = {'parent' => {'id' => destination.id}}
+      parent.merge!('name' => name) if name
+
+      request.body = JSON.dump(parent)
+      resp = @session.request(uri, request)
+      RubyBox::Folder.new(@session, resp)
+    end
+
     private
 
     def resource_name
