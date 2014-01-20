@@ -151,30 +151,30 @@ describe RubyBox::Folder do
 
     it 'uses itself for the copy uri' do
       source_folder.copy_to destination
-      expect(last_uri).to match /folders\/#{source_folder.id}\/copy/
+      last_uri.should match /folders\/#{source_folder.id}\/copy/
     end
 
     it 'uses the destination as the parent' do
       source_folder.copy_to destination
-      expect(last_request['parent']['id']).to eq(destination.id)
+      last_request['parent']['id'].should eq(destination.id)
     end
 
     it 'uses the source as the name by default' do
       source_folder.copy_to destination
-      expect(last_request).to_not have_key 'name'
+      last_request.should_not have_key 'name'
     end
 
     it 'can provide a new name if desired' do
       source_folder.copy_to destination, 'renamed-folder'
-      expect(last_request['name']).to eq('renamed-folder')
+      last_request['name'].should eq('renamed-folder')
     end
 
     it 'returns the newly created folder' do
       @session.should_receive(:request).and_return('type' => 'folder', 'id' => '123')
       copied_folder = source_folder.copy_to(destination)
 
-      expect(copied_folder).to be_a(RubyBox::Folder)
-      expect(copied_folder.id).to eq("123")
+      copied_folder.should be_a(RubyBox::Folder)
+      copied_folder.id.should eq("123")
     end
   end
 
