@@ -67,6 +67,8 @@ module RubyBox
       }).create
     end
 
+    # see http://developers.box.com/docs/#folders-copy-a-folder
+    # for a description of the behavior
     def copy_to(destination, name=nil)
       parent = {'parent' => {'id' => destination.id}}
       parent.merge!('name' => name) if name
