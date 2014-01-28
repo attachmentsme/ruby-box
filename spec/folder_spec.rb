@@ -137,4 +137,45 @@ describe RubyBox::Folder do
     end
   end
 
+  context '#copy_to' do
+    let(:source_folder) { RubyBox::Folder.new(@session, {'id' => 1}) }
+    let(:destination) { RubyBox::Folder.new(@session, {'id' => 100}) }
+    let(:last_request) { JSON.parse(@request.body) }
+    let(:last_uri) { @uri.to_s }
+
+    before(:each) do
+      @session.stub(:request).with do |uri, request, _, _|
+        @uri, @request = uri, request
+      end
+    end
+
+    it 'uses itself for the copy uri' do
+      source_folder.copy_to destination
+      last_uri.should match /folders\/#{source_folder.id}\/copy/
+    end
+
+    it 'uses the destination as the parent' do
+      source_folder.copy_to destination
+      last_request['parent']['id'].should eq(destination.id)
+    end
+
+    it 'uses the source as the name by default' do
+      source_folder.copy_to destination
+      last_request.should_not have_key 'name'
+    end
+
+    it 'can provide a new name if desired' do
+      source_folder.copy_to destination, 'renamed-folder'
+      last_request['name'].should eq('renamed-folder')
+    end
+
+    it 'returns the newly created folder' do
+      @session.should_receive(:request).and_return('type' => 'folder', 'id' => '123')
+      copied_folder = source_folder.copy_to(destination)
+
+      copied_folder.should be_a(RubyBox::Folder)
+      copied_folder.id.should eq("123")
+    end
+  end
+
 end
