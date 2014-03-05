@@ -17,18 +17,21 @@ describe RubyBox::Client do
     })
   end
 
-  describe '#authorize_url' do
-    let(:redirect_uri) { "redirect_uri" }
-    let(:state) { "state" }
+  let(:redirect_uri) { "redirect_uri" }
 
+  describe '#authorize_url' do
     it "should accept redirect_uri" do
       @auth_code.should_receive(:authorize_url).with({ redirect_uri: redirect_uri})
       @session.authorize_url(redirect_uri)
     end
+  end
+
+  describe '#authorize_url_with_state' do
+    let(:state) { "state" }
 
     it "should accept redirect_uri and state" do
       @auth_code.should_receive(:authorize_url).with({ redirect_uri: redirect_uri, state: state})
-      @session.authorize_url(redirect_uri, { state: state})
+      @session.authorize_url_with_state(redirect_uri, state)
     end
   end
 end
