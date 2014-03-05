@@ -1,6 +1,6 @@
 require 'oauth2'
 
-module RubyBox  
+module RubyBox
   class Session
 
     OAUTH2_URLS = {
@@ -8,7 +8,7 @@ module RubyBox
       :authorize_url => "/api/oauth2/authorize",
       :token_url => "/api/oauth2/token"
     }
-    
+
     def initialize(opts={}, backoff=0.1)
 
       @backoff = backoff # try not to excessively hammer API.
@@ -24,9 +24,8 @@ module RubyBox
       end
     end
 
-    def authorize_url(redirect_uri)
-      @redirect_uri = redirect_uri
-      @oauth2_client.auth_code.authorize_url(:redirect_uri => redirect_uri)
+    def authorize_url(redirect_uri, opts={})
+      @oauth2_client.auth_code.authorize_url(opts.merge(:redirect_uri => redirect_uri))
     end
 
     def get_access_token(code)
@@ -37,7 +36,7 @@ module RubyBox
       refresh_access_token_obj = OAuth2::AccessToken.new(@oauth2_client, @access_token.token, {'refresh_token' => refresh_token})
       @access_token = refresh_access_token_obj.refresh!
     end
-    
+
     def build_auth_header
       "BoxAuth api_key=#{@api_key}&auth_token=#{@auth_token}"
     end
@@ -53,21 +52,21 @@ module RubyBox
       request = Net::HTTP::Delete.new( uri.request_uri )
       resp = request( uri, request, raw )
     end
-    
+
     def request(uri, request, raw=false, retries=0)
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.ssl_version = :SSLv3
       #http.set_debug_output($stdout)
-      
+
       if @access_token
         request.add_field('Authorization', "Bearer #{@access_token.token}")
       else
         request.add_field('Authorization', build_auth_header)
       end
 
-      
+
       request.add_field('As-User', "#{@as_user}") if @as_user
 
       response = http.request(request)
@@ -90,7 +89,7 @@ module RubyBox
     def do_stream(url, opts)
       params = {
         :content_length_proc => opts[:content_length_proc],
-        :progress_proc => opts[:progress_proc]        
+        :progress_proc => opts[:progress_proc]
       }
 
       if @access_token
@@ -98,12 +97,12 @@ module RubyBox
       else
         params['Authorization'] = build_auth_header
       end
-      
+
       params['As-User'] = @as_user if @as_user
 
       open(url, params)
     end
-    
+
     def handle_errors( response, raw )
       status = response.code.to_i
       body = response.body
@@ -121,7 +120,7 @@ module RubyBox
       case status / 100
       when 3
         # 302 Found. We should return the url
-        parsed_body["location"] = response["Location"] if status == 302                  
+        parsed_body["location"] = response["Location"] if status == 302
       when 4
         raise(RubyBox::ItemNameInUse.new(parsed_body, status, body), parsed_body["message"]) if parsed_body["code"] == "item_name_in_use"
         raise(RubyBox::AuthError.new(parsed_body, status, body), parsed_body["message"]) if parsed_body["code"] == "unauthorized" || status == 401
