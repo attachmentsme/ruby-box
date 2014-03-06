@@ -79,7 +79,7 @@ module RubyBox
       # Got unauthorized (401) status, try to refresh the token
       if response.code.to_i == 401 and @refresh_token and retries == 0
         refresh_token(@refresh_token)
-        request(uri, request, raw, retries + 1)
+        return request(uri, request, raw, retries + 1)
       end
 
       sleep(@backoff) # try not to excessively hammer API.
