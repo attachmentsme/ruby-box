@@ -3,13 +3,13 @@
 require 'spec_helper'
 require 'ruby-box'
 
-describe RubyBox::Client do
+describe RubyBox::Session do
   before do
     @auth_code = double("OAuth2::Strategy::AuthCode")
-
     @client = double("OAuth2::Client")
-    @client.should_receive(:auth_code) { @auth_code }
-    OAuth2::Client.should_receive(:new) { @client }
+
+    @client.stub(:auth_code) { @auth_code }
+    OAuth2::Client.stub(:new) { @client }
 
     @session = RubyBox::Session.new({
       client_id: "client id",
