@@ -24,12 +24,11 @@ module RubyBox
       end
     end
 
-    def authorize_url(redirect_uri)
-      @oauth2_client.auth_code.authorize_url(:redirect_uri => redirect_uri)
-    end
+    def authorize_url(redirect_uri, state=nil)
+      opts = { :redirect_uri => redirect_uri }
+      opts[:state] = state if state
 
-    def authorize_url_with_state(redirect_uri, state)
-      @oauth2_client.auth_code.authorize_url(:redirect_uri => redirect_uri, :state => state)
+      @oauth2_client.auth_code.authorize_url(opts)
     end
 
     def get_access_token(code)

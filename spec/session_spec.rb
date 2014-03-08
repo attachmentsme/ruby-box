@@ -31,7 +31,7 @@ describe RubyBox::Client do
 
     it "should accept redirect_uri and state" do
       @auth_code.should_receive(:authorize_url).with({ redirect_uri: redirect_uri, state: state})
-      @session.authorize_url_with_state(redirect_uri, state)
+      @session.authorize_url(redirect_uri, state)
     end
   end
 end
