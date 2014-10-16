@@ -8,6 +8,6 @@ gem "addressable"
 group :development do
   gem "rspec"
   gem "bundler"
-  gem "jeweler", "~> 1.6.4"
+  gem "jeweler"
   gem "webmock"
 end
