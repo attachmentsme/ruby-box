@@ -60,7 +60,6 @@ module RubyBox
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      http.ssl_version = :SSLv3
       #http.set_debug_output($stdout)
 
       if @access_token
